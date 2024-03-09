@@ -3,10 +3,7 @@ import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
 import { DatabaseModule, LoggerModule } from '@app/common';
 import { ReservationsRepository } from './reservations.repository';
-import {
-  ReservationDocument,
-  ReservationSchema,
-} from './models/reservations.schema';
+import { ReservationDocument, ReservationSchema } from './models/reservations.schema';
 
 @Module({
   imports: [
