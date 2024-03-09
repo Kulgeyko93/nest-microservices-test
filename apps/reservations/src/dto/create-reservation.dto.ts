@@ -8,8 +8,6 @@ const CreateReservationSchema = z.object({
   invoiceId: z.string().min(1),
 });
 
-export class CreateReservationDto extends createZodDto(
-  CreateReservationSchema,
-) {}
+export class CreateReservationDto extends createZodDto(CreateReservationSchema) {}
 
 export type TCreateReservation = z.infer<typeof CreateReservationSchema>;
