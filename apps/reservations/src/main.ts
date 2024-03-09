@@ -10,8 +10,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ZodValidationPipe());
   app.useLogger(app.get(Logger));
 
-  await app.listen(port, () =>
-    console.log(`Reservations service starts on port ${port}`),
-  );
+  await app.listen(port, () => console.log(`Reservations service starts on port ${port}`));
 }
 bootstrap();
