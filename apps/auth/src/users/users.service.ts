@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcrypt';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +21,10 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
     });
+  }
+
+  async getUser(getUserDto: GetUserDto) {
+    return this.usersRepository.findOne(getUserDto);
   }
 
   async verifyUser(email: string, password: string) {
