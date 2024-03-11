@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { ReservationsModule } from './reservations.module';
 import { Logger } from 'nestjs-pino';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { ConfigService } from '@nestjs/config';
+
+const configService = new ConfigService();
 
 async function bootstrap() {
-  const port = 8080;
+  const port = configService.get('PORT') || 7080;
   const app = await NestFactory.create(ReservationsModule);
 
   app.useGlobalPipes(new ZodValidationPipe());
