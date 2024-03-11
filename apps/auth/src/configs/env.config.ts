@@ -6,6 +6,7 @@ export const envSchema = z.object({
   PORT: z.coerce.number(),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
+  SALT: z.coerce.number(),
 });
 
 export const authEnvConfig = (): ConfigModuleOptions => ({

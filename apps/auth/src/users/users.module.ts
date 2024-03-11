@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { UserDocument, UserSchema } from './models/user.schema';
 import { DatabaseModule, LoggerModule } from '@app/common';
 import { UsersRepository } from './users.repository';
+import { LocalStrategy } from '../strategies/local.strategy';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UsersRepository } from './users.repository';
     LoggerModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [LocalStrategy, UsersService, UsersRepository],
+  exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}
