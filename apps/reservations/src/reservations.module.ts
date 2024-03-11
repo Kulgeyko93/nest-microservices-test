@@ -5,7 +5,7 @@ import { DatabaseModule, LoggerModule } from '@app/common';
 import { ReservationsRepository } from './reservations.repository';
 import { ReservationDocument, ReservationSchema } from './models/reservations.schema';
 import { ConfigModule } from '@nestjs/config';
-import { getValidatedConfig } from './configs/env.config';
+import { reservationEnvConfig } from './configs/env.config';
 
 @Module({
   imports: [
@@ -17,10 +17,7 @@ import { getValidatedConfig } from './configs/env.config';
       },
     ]),
     LoggerModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validate: getValidatedConfig,
-    }),
+    ConfigModule.forRoot(reservationEnvConfig()),
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],

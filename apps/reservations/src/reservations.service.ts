@@ -5,9 +5,7 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 @Injectable()
 export class ReservationsService {
-  constructor(
-    private readonly reservationsRepository: ReservationsRepository,
-  ) {}
+  constructor(private readonly reservationsRepository: ReservationsRepository) {}
   create(createReservationDto: TCreateReservation) {
     return this.reservationsRepository.create({
       ...createReservationDto,

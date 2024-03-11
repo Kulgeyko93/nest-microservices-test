@@ -8,4 +8,5 @@ export const jwtAuthConfig = (): JwtModuleAsyncOptions => ({
       expiresIn: `${configService.get<string>('JWT_EXPIRATION')}s`,
     },
   }),
+  inject: [ConfigService],
 });

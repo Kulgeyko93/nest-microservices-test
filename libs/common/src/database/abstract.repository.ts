@@ -17,15 +17,10 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   }
 
   async findOne(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
-    const document = await this.model
-      .findOne(filterQuery)
-      .lean<TDocument>(true);
+    const document = await this.model.findOne(filterQuery).lean<TDocument>(true);
 
     if (!document) {
-      this.logger.warn(
-        'Document was not found wit the filterQuery',
-        filterQuery,
-      );
+      this.logger.warn('Document was not found wit the filterQuery', filterQuery);
       throw new NotFoundException('Document was not found');
     }
 
@@ -33,17 +28,12 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   }
 
   async find(filterQuery: FilterQuery<TDocument>): Promise<TDocument[]> {
-    const documents = await this.model
-      .find(filterQuery)
-      .lean<TDocument[]>(true);
+    const documents = await this.model.find(filterQuery).lean<TDocument[]>(true);
 
     return documents;
   }
 
-  async findOneAndUpdate(
-    filterQuery: FilterQuery<TDocument>,
-    update: UpdateQuery<TDocument>,
-  ): Promise<TDocument> {
+  async findOneAndUpdate(filterQuery: FilterQuery<TDocument>, update: UpdateQuery<TDocument>): Promise<TDocument> {
     const document = await this.model
       .findOneAndUpdate(filterQuery, update, {
         new: true,
@@ -51,19 +41,14 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       .lean<TDocument>(true);
 
     if (!document) {
-      this.logger.warn(
-        'Document was not found wit the filterQuery',
-        filterQuery,
-      );
+      this.logger.warn('Document was not found wit the filterQuery', filterQuery);
       throw new NotFoundException('Document was not found');
     }
 
     return document;
   }
 
-  async findOneAndDelete(
-    filterQuery: FilterQuery<TDocument>,
-  ): Promise<TDocument | null> {
+  async findOneAndDelete(filterQuery: FilterQuery<TDocument>): Promise<TDocument | null> {
     return this.model.findOneAndDelete(filterQuery).lean<TDocument>(true);
   }
 }
