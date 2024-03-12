@@ -6,6 +6,8 @@ import { ReservationsRepository } from './reservations.repository';
 import { ReservationDocument, ReservationSchema } from './models/reservations.schema';
 import { ConfigModule } from '@nestjs/config';
 import { reservationEnvConfig } from './configs/env.config';
+import { ClientsModule } from '@nestjs/microservices';
+import { clientModuleConfig } from './configs/client-module.config';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { reservationEnvConfig } from './configs/env.config';
     ]),
     LoggerModule,
     ConfigModule.forRoot(reservationEnvConfig()),
+    ClientsModule.registerAsync(clientModuleConfig()),
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationsRepository],

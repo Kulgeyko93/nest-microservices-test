@@ -5,6 +5,8 @@ import * as path from 'node:path';
 export const envSchema = z.object({
   PORT: z.coerce.number(),
   MONGODB_URI: z.string(),
+  AUTH_HOST: z.string(),
+  AUTH_PORT: z.coerce.number(),
 });
 
 export const reservationEnvConfig = (): ConfigModuleOptions => ({

@@ -6,11 +6,12 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 @Injectable()
 export class ReservationsService {
   constructor(private readonly reservationsRepository: ReservationsRepository) {}
-  create(createReservationDto: TCreateReservation) {
+
+  create(userId: string, createReservationDto: TCreateReservation) {
     return this.reservationsRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
-      userId: 'test',
+      userId,
     });
   }
 
