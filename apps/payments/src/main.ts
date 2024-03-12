@@ -1,15 +1,13 @@
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
-import * as cookieParser from 'cookie-parser';
+import { PaymentsModule } from './payments.module';
 import { Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
 
 const configService = new ConfigService();
 
 async function bootstrap() {
-  const port = configService.get('HTTP_PORT') || 8081;
-  const app = await NestFactory.create(AuthModule);
+  const app = await NestFactory.create(PaymentsModule);
 
   app.connectMicroservice({
     transport: Transport.TCP,
@@ -20,9 +18,8 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(Logger));
-  app.use(cookieParser());
 
   await app.startAllMicroservices();
-  await app.listen(port, () => console.log(`Auth service starts on port ${port}`));
+  console.log(`Payment service was started`);
 }
 bootstrap();
