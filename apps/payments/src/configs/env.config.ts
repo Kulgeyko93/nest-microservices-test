@@ -4,6 +4,8 @@ import * as path from 'node:path';
 
 export const envSchema = z.object({
   TCP_PORT: z.coerce.number(),
+  NOTIFICATIONS_HOST: z.string(),
+  NOTIFICATIONS_PORT: z.coerce.number(),
   STRIPE_SECRET_KEY: z.string(),
 });
 
