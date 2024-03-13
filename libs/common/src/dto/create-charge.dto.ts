@@ -6,6 +6,7 @@ import { z } from 'nestjs-zod/z';
 export const CreateChargeSchema = z.object({
   card: CardSchema,
   amount: z.number(),
+  email: z.string().email(),
 });
 
 export class CreateChargeDto extends createZodDto(CreateChargeSchema) {}
