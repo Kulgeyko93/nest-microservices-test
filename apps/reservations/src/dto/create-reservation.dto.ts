@@ -6,7 +6,6 @@ const CreateReservationSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   placeId: z.string().min(1),
-  invoiceId: z.string().min(1),
   charge: z.object({
     card: CardSchema,
     amount: z.number().positive(),

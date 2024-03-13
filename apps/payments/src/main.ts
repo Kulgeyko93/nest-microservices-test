@@ -3,6 +3,7 @@ import { PaymentsModule } from './payments.module';
 import { Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 const configService = new ConfigService();
 
@@ -18,6 +19,7 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(Logger));
+  app.useGlobalPipes(new ZodValidationPipe());
 
   await app.startAllMicroservices();
   console.log(`Payment service was started`);

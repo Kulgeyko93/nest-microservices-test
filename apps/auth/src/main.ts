@@ -4,6 +4,7 @@ import { AuthModule } from './auth.module';
 import * as cookieParser from 'cookie-parser';
 import { Transport } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 const configService = new ConfigService();
 
@@ -21,6 +22,7 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
+  app.useGlobalPipes(new ZodValidationPipe());
 
   await app.startAllMicroservices();
   await app.listen(port, () => console.log(`Auth service starts on port ${port}`));
