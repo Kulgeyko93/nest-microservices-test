@@ -9,8 +9,8 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
 
-    "start:dev": "concurrently -c \"cyan.bold,green.bold,green.bold\" \"npm:dev-*\"",
-    "start:debug": "concurrently -c \"cyan.bold,green.bold,green.bold\" \"npm:debug-*\"",
+    "start:dev": "concurrently -c \"cyan.bold,green.bold,blue.bold\" \"npm:dev-*\"",
+    "start:debug": "concurrently -c \"cyan.bold,green.bold,blue.bold\" \"npm:debug-*\"",
 
     "dev-reservations": "nest start reservations --watch ",
     "dev-auth": "nest start auth --watch",

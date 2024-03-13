@@ -11,24 +11,15 @@ export class PaymentsService {
 
   constructor(private readonly configService: ConfigService) {}
 
-  async createCharge({ card, amount }: CreateCharge) {
-    try {
-      const paymentMethod = await this.stripeClient.paymentMethods.create({
-        type: 'card',
-        card,
-      });
+  async createCharge({ amount }: CreateCharge) {
+    const paymentIntent = await this.stripeClient.paymentIntents.create({
+      payment_method: 'pm_card_visa',
+      amount: amount * 100,
+      confirm: true,
+      payment_method_types: ['card'],
+      currency: 'usd',
+    });
 
-      const paymentIntent = await this.stripeClient.paymentIntents.create({
-        payment_method: paymentMethod.id,
-        amount: amount * 100,
-        confirm: true,
-        payment_method_types: ['card'],
-        currency: 'usd',
-      });
-
-      return paymentIntent;
-    } catch (error) {
-      console.log(error);
-    }
+    return paymentIntent;
   }
 }
