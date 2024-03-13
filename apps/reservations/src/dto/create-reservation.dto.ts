@@ -7,8 +7,10 @@ const CreateReservationSchema = z.object({
   endDate: z.coerce.date(),
   placeId: z.string().min(1),
   invoiceId: z.string().min(1),
-  card: CardSchema,
-  amount: z.number().positive(),
+  charge: z.object({
+    card: CardSchema,
+    amount: z.number().positive(),
+  }),
 });
 
 export class CreateReservationDto extends createZodDto(CreateReservationSchema) {}

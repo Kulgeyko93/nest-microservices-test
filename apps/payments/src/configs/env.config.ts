@@ -3,7 +3,7 @@ import { z } from 'zod';
 import * as path from 'node:path';
 
 export const envSchema = z.object({
-  TSP_PORT: z.coerce.number(),
+  TCP_PORT: z.coerce.number(),
   STRIPE_SECRET_KEY: z.string(),
 });
 
