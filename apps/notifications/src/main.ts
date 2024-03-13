@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { PaymentsModule } from './payments.module';
+import { NotificationsModule } from './notifications.module';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { Logger } from 'nestjs-pino';
 import { Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'nestjs-pino';
-import { ZodValidationPipe } from 'nestjs-zod';
 
 async function bootstrap() {
-  const app = await NestFactory.create(PaymentsModule);
+  const app = await NestFactory.create(NotificationsModule);
   const configService = app.get(ConfigService);
 
   app.connectMicroservice({
@@ -21,6 +21,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ZodValidationPipe());
 
   await app.startAllMicroservices();
-  console.log(`Payment service was started`);
+  console.log(`Notification service was started`);
 }
 bootstrap();
