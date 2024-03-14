@@ -29,3 +29,23 @@ services:
       - '4002:4002'
     volumes:
       - .:/opt/src/app
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: yarn dev-payments
+    ports:
+      - '5002:5002'
+    volumes:
+      - .:/opt/src/app
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: yarn dev-notifications
+    ports:
+      - '6002:6002'
+    volumes:
+      - .:/opt/src/app
