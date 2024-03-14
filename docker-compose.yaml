@@ -11,4 +11,21 @@ services:
     volumes:
       - .:/opt/src/app
   mongodb:
-    image: mongo
+    container_name: mongodb_container
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./volumes/data:/data/db
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: yarn dev-auth
+    ports:
+      - '4001:4001'
+      - '4002:4002'
+    volumes:
+      - .:/opt/src/app
