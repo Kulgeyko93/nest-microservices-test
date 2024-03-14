@@ -6,7 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "concurrently -c \"cyan.bold,green.bold,blue.bold,yellow.bold\" \"npm:build-*\"",
+    "build-reservations": "nest build reservations",
+    "build-auth": "nest build auth",
+    "build-payments": "nest build payments",
+    "build-notifications": "nest build notifications",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:dev": "concurrently -c \"cyan.bold,green.bold,blue.bold,yellow.bold\" \"npm:dev-*\"",
     "start:debug": "concurrently -c \"cyan.bold,green.bold,blue.bold,yellow.bold\" \"npm:debug-*\"",
