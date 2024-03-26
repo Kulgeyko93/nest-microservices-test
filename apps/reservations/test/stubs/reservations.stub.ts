@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export const reservationStub = () => ({
   userId: '123',
   startDate: new Date('12-23-2023'),
