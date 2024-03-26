@@ -12,7 +12,7 @@ export const envSchema = z.object({
 export const paymentEnvConfig = (): ConfigModuleOptions => ({
   validate: (env) => envSchema.parse(env),
   isGlobal: true,
-  envFilePath: path.join(__dirname, '..', '..', '..', 'envs', '.payment.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.payment.env'),
 });
 
 export type Env = z.infer<typeof envSchema>;

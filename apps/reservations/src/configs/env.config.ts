@@ -14,7 +14,7 @@ export const envSchema = z.object({
 export const reservationEnvConfig = (): ConfigModuleOptions => ({
   validate: (env) => envSchema.parse(env),
   isGlobal: true,
-  envFilePath: path.join(__dirname, '..', '..', '..', 'envs', '.reservation.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.reservation.env'),
 });
 
 export type Env = z.infer<typeof envSchema>;

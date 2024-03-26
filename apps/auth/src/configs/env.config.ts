@@ -13,7 +13,7 @@ export const envSchema = z.object({
 export const authEnvConfig = (): ConfigModuleOptions => ({
   validate: (env) => envSchema.parse(env),
   isGlobal: true,
-  envFilePath: path.join(__dirname, '..', '..', '..', 'envs', '.auth.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.auth.env'),
 });
 
 export type Env = z.infer<typeof envSchema>;
