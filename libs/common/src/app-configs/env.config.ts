@@ -9,7 +9,7 @@ export const envSchema = z.object({
 export const commonLibEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(__dirname, '..', '..', '..', 'envs', '.common.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.common.env'),
 });
 
 export type Env = z.infer<typeof envSchema>;
