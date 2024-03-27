@@ -1,10 +1,9 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-
-import { ReservationsRepository } from '../../src/reservations.repository';
-import { reservationStub } from '../stubs/reservations.stub';
-import { ReservationDocument } from '../../src/models/reservations.schema';
 import { Types } from 'mongoose';
+import { ReservationDocument } from '../../src/models/reservations.schema';
+import { ReservationsRepository } from '../../src/reservations.repository';
+import { reservationStub } from './stubs/reservations.stub';
 
 describe('ReservationsRepository', () => {
   let service: ReservationsRepository;
