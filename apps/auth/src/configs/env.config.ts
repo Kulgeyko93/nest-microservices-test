@@ -7,6 +7,7 @@ export const envSchema = z.object({
   TSP_PORT: z.coerce.number(),
   JWT_SECRET: z.string(),
   JWT_EXPIRATION: z.string(),
+  RABBITMQ_URI: z.string(),
   SALT: z.coerce.number(),
 });
 

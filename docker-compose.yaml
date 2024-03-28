@@ -10,14 +10,6 @@ services:
       - '7001:7001'
     volumes:
       - .:/opt/src/app
-  mongodb:
-    container_name: mongodb_container
-    image: mongo:latest
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - ./volumes/data:/data/db
   auth:
     build:
       context: .
@@ -49,3 +41,15 @@ services:
       - '6002:6002'
     volumes:
       - .:/opt/src/app
+  mongodb:
+    container_name: mongodb_container
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./volumes/data:/data/db
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5672:5672

@@ -5,6 +5,7 @@ import * as path from 'node:path';
 export const envSchema = z.object({
   TCP_PORT: z.coerce.number(),
   SMTP_USER: z.string(),
+  RABBITMQ_URI: z.string(),
   GOOGLE_OAUTH_CLIENT_ID: z.string(),
   GOOGLE_OAUTH_CLIENT_SECRET: z.string(),
   GOOGLE_OAUTH_CLIENT_TOKEN: z.string(),
