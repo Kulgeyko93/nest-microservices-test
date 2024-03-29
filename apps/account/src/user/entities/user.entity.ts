@@ -4,15 +4,15 @@ import { IUserModel } from '../../../../../libs/common/src';
 export class UserEntity implements IUserModel {
   id: string;
   email: string;
-  name: string;
   password: string;
+  refreshToken: string | null;
   createdAt: Date;
   updatedAt: Date;
-  refreshToken: string;
 
-  constructor(user: Pick<IUserModel, 'email' | 'password'>) {
+  constructor(user: Pick<IUserModel, 'email' | 'password' | 'refreshToken'>) {
     this.email = user.email;
     this.password = user.password;
+    this.refreshToken = user.refreshToken;
   }
 
   public async setPassword(password: string) {
@@ -25,7 +25,8 @@ export class UserEntity implements IUserModel {
     return compare(password, this.password);
   }
 
-  public validateRefreshToken(refreshToken: string) {
+  public validateRefreshToken(refreshToken: string | null) {
+    if (!refreshToken || !this.refreshToken) return false;
     return compare(refreshToken, this.refreshToken);
   }
 }

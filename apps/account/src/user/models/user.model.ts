@@ -26,6 +26,12 @@ export class UserModel extends BaseEntity implements IUserModel {
   })
   password: string;
 
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  refreshToken: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
