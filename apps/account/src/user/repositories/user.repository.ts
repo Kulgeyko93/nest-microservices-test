@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserModel } from '../models/user.model';
-import { IUserModel } from '@lib/common';
+import { IUserModel, NoUndefinedField } from '@lib/common';
 
 @Injectable()
 export class UserRepository {
@@ -18,7 +18,7 @@ export class UserRepository {
     return newUser;
   }
 
-  async findOne(filter: Partial<IUserModel>) {
+  async findOne(filter: Partial<NoUndefinedField<IUserModel>>) {
     return this.userRepository.findOne({
       where: filter,
     });
@@ -28,7 +28,10 @@ export class UserRepository {
     return this.userRepository.find();
   }
 
-  async update(filter: Partial<IUserModel>, payload: Partial<IUserModel>) {
+  async update(
+    filter: Partial<NoUndefinedField<IUserModel>>,
+    payload: Partial<IUserModel>,
+  ) {
     return this.userRepository.update(filter, payload);
   }
 }

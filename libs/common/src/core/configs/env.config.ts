@@ -12,4 +12,4 @@ export const commonEnvConfig = (): ConfigModuleOptions => ({
   envFilePath: path.join(process.cwd(), 'envs', '.common.env'),
 });
 
-export type Env = z.infer<typeof envSchema>;
+export type CommonEnv = z.infer<typeof envSchema>;
