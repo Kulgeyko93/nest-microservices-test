@@ -1,23 +1,18 @@
 import { compare, genSalt, hash } from 'bcrypt';
+import { IUserModel } from '../../../../../libs/common/src';
 
-export class UserEntity implements User {
+export class UserEntity implements IUserModel {
   id: string;
   email: string;
   name: string;
   password: string;
-  role: Roles;
   createdAt: Date;
   updatedAt: Date;
   refreshToken: string;
 
-  constructor(
-    user: Pick<User, 'email' | 'name' | 'role' | 'password' | 'refreshToken'>,
-  ) {
+  constructor(user: Pick<IUserModel, 'email' | 'password'>) {
     this.email = user.email;
     this.password = user.password;
-    this.name = user.name;
-    this.role = user.role;
-    this.refreshToken = user.refreshToken;
   }
 
   public async setPassword(password: string) {
