@@ -3,7 +3,7 @@ import { z } from 'zod';
 import * as path from 'node:path';
 
 export const envSchema = z.object({
-  MONGODB_URI: z.string(),
+  PORT: z.string(),
 });
 
 export const commonEnvConfig = (): ConfigModuleOptions => ({
