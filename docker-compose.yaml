@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  postgres: 
+    image: postgres:16
+    container_name: posgres_db_account
+    ports:
+      - 5432:5432
+    environment:
+      - PSQL_HOSTNAME=localhost
+      - PSQL_PORT=5432
+      - PSQL_DB_NAME=microservice-account
+      - PSQL_USERNAME=postgres
+      - PSQL_PASSWORD=12345678
+      - PSQL_LOGGING=false
+      - PSQL_SYNCHRONIZE=false
+    volumes:
+      - ./volumes/postgres_data:/var/lib/postgresql/data
