@@ -3,6 +3,7 @@ services:
   postgres: 
     image: postgres:16-alpine
     container_name: posgres_db_account
+    restart: always
     ports:
       - "5433:5432"
     environment:
@@ -12,3 +13,41 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./volumes/postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+
+  # account:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/account/Dockerfile
+  #   container_name: account-service
+  #   environment:
+  #     - PORT=3030
+  #     - JWT_SECRET=asdad12rr!@Fafafa
+  #     - JWT_ACCESS_SECRET=zxczsds!D321
+  #     - JWT_ACCESS_EXPIRES='15m'
+  #     - JWT_REFRESH_SECRET=!ASFwofnwog123
+  #     - JWT_REFRESH_EXPIRES='30d'
+  #     - PSQL_HOSTNAME=localhost
+  #     - PSQL_PORT=5433
+  #     - PSQL_DB_NAME=account-example
+  #     - PSQL_USERNAME=postgres
+  #     - PSQL_PASSWORD=12345678
+  #     - PSQL_LOGGING=false
+  #     - PSQL_SYNCHRONIZE=true
+
+
+  #   depends_on:
+  #     - postgres
+  #   volumes:
+  #     - .:/opt/src/app

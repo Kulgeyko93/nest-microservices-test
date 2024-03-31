@@ -4,7 +4,7 @@ import { AccountService } from './account.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { accountEnvConfig } from '../core/configs/env.config';
+import { accountEnvConfig } from './auth/core/configs/env.config';
 
 @Module({
   imports: [UserModule, AuthModule, ConfigModule.forRoot(accountEnvConfig())],
