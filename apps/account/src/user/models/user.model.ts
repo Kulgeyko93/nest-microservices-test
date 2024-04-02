@@ -35,8 +35,8 @@ export class UserModel extends BaseEntity implements IUserModel {
     type: 'varchar',
     nullable: true,
   })
-  @Field()
-  refreshToken: string | null;
+  @Field({ nullable: true })
+  refreshToken: string;
 
   @CreateDateColumn()
   @Field()
