@@ -30,7 +30,7 @@ export class AuthService {
     const newUserEntity = await new UserEntity({
       email,
       password: '',
-      refreshToken: null,
+      refreshToken: '',
     }).setPassword(password);
 
     const newUser = await this.userRepository.create(newUserEntity);
@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   async logout(userId: string) {
-    return this.userRepository.update({ id: userId }, { refreshToken: null });
+    return this.userRepository.update({ id: userId }, { refreshToken: '' });
   }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
