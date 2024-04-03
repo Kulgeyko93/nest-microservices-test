@@ -1532,13 +1532,6 @@
   resolved "https://registry.yarnpkg.com/@types/methods/-/methods-1.1.4.tgz#d3b7ac30ac47c91054ea951ce9eed07b1051e547"
   integrity sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ==
 
-"@types/mime@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-4.0.0.tgz#b5f8a75697ac775ecf1daaea9bfb91cde065b397"
-  integrity sha512-5eEkJZ/BLvTE3vXGKkWlyTSUVZuzj23Wj8PoyOq2lt5I3CYbiLBOPb3XmCW6QcuOibIUE6emHXHt9E/F/rCa6w==
-  dependencies:
-    mime "*"
-
 "@types/mime@^1":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
@@ -1553,9 +1546,9 @@
     form-data "^4.0.0"
 
 "@types/node@*", "@types/node@^20.3.1":
-  version "20.12.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.2.tgz#9facdd11102f38b21b4ebedd9d7999663343d72e"
-  integrity sha512-zQ0NYO87hyN6Xrclcqp7f8ZbXNbRfoGWNcMvHTPQp9UUrwI0mI7XBz+cu7/W6/VClYo2g63B0cjull/srU7LgQ==
+  version "20.12.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.3.tgz#d6658c2c7776c1cad93534bb45428195ed840c65"
+  integrity sha512-sD+ia2ubTeWrOu+YMF+MTAB7E+O7qsMqAbMfW7DG3K1URwhZ5hN1pLlRVGbf4wDFzSfikL05M17EyorS86jShw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -1612,13 +1605,13 @@
     "@types/node" "*"
 
 "@types/serve-static@*":
-  version "1.15.5"
-  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.15.5.tgz#15e67500ec40789a1e8c9defc2d32a896f05b033"
-  integrity sha512-PDRk21MnK70hja/YF8AHfC7yIsiQHn1rcXx7ijCFBX/k+XQJhQT/gw3xekXKJvx+5SXaMMS8oqQy09Mzvz2TuQ==
+  version "1.15.7"
+  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.15.7.tgz#22174bbd74fb97fe303109738e9b5c2f3064f714"
+  integrity sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==
   dependencies:
     "@types/http-errors" "*"
-    "@types/mime" "*"
     "@types/node" "*"
+    "@types/send" "*"
 
 "@types/stack-utils@^2.0.0":
   version "2.0.3"
@@ -2938,9 +2931,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.668:
-  version "1.4.723"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.723.tgz#827da30c96b316684d352c3d81430029df01bb8e"
-  integrity sha512-rxFVtrMGMFROr4qqU6n95rUi9IlfIm+lIAt+hOToy/9r6CDv0XiEcQdC3VP71y1pE5CFTzKV0RvxOGYCPWWHPw==
+  version "1.4.724"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.724.tgz#e0a86fe4d3d0e05a4d7b032549d79608078f830d"
+  integrity sha512-RTRvkmRkGhNBPPpdrgtDKvmOEYTrPlXDfc0J/Nfq5s29tEahAwhiX4mmhNzj6febWMleulxVYPh7QwCSL/EldA==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -5006,11 +4999,6 @@ mime-types@^2.1.12, mime-types@^2.1.27, mime-types@~2.1.24, mime-types@~2.1.34:
   dependencies:
     mime-db "1.52.0"
 
-mime@*:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-4.0.1.tgz#ad7563d1bfe30253ad97dedfae2b1009d01b9470"
-  integrity sha512-5lZ5tyrIfliMXzFtkYyekWbtRXObT9OWa8IwQ5uxTBDHucNNwniRqo0yInflj+iYi5CBa6qxadGzGarDfuEOxA==
-
 mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
@@ -5532,10 +5520,10 @@ pg-cloudflare@^1.1.1:
   resolved "https://registry.yarnpkg.com/pg-cloudflare/-/pg-cloudflare-1.1.1.tgz#e6d5833015b170e23ae819e8c5d7eaedb472ca98"
   integrity sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q==
 
-pg-connection-string@^2.6.3:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.6.3.tgz#0393c04b00262bca1d656694f9193aaba9f17fb4"
-  integrity sha512-77FxhhKJQH+xJx6tDqkhhMa0nZvv3U1HYLDQgwZxZafVD583++O5LXn5oo5HaQZ0vXwYcZA1koYAJM3JvD6Gtw==
+pg-connection-string@^2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.6.4.tgz#f543862adfa49fa4e14bc8a8892d2a84d754246d"
+  integrity sha512-v+Z7W/0EO707aNMaAEfiGnGL9sxxumwLl2fJvCQtMn9Fxsg+lPpPkdcyBSv/KFgpGdYkMfn+EI1Or2EHjpgLCA==
 
 pg-int8@1.0.1:
   version "1.0.1"
@@ -5564,11 +5552,11 @@ pg-types@^2.1.0:
     postgres-interval "^1.1.0"
 
 pg@^8.11.3:
-  version "8.11.4"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.4.tgz#4b22f5cfe0cc51f0c563dbf7e021705a710a3009"
-  integrity sha512-pWb7JKPxGk1UFbtq7jQ0m3IfPpb7LLACCEyN8/u9DYEom+Q/BSKy+4TRl4+Hh003AOYhppB/z+QK87/hx/bk0w==
+  version "8.11.5"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.5.tgz#e722b0a5f1ed92931c31758ebec3ddf878dd4128"
+  integrity sha512-jqgNHSKL5cbDjFlHyYsCXmQDrfIX/3RsNwYqpd4N0Kt8niLuNoRNH+aazv6cOd43gPh9Y4DjQCtb+X0MH0Hvnw==
   dependencies:
-    pg-connection-string "^2.6.3"
+    pg-connection-string "^2.6.4"
     pg-pool "^3.6.2"
     pg-protocol "^1.6.1"
     pg-types "^2.1.0"
@@ -6390,9 +6378,9 @@ terser-webpack-plugin@^5.3.10:
     terser "^5.26.0"
 
 terser@^5.26.0:
-  version "5.30.2"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.30.2.tgz#79fc2222c241647cea54ab928ac987ffbe8ce9e2"
-  integrity sha512-vTDjRKYKip4dOFL5VizdoxHTYDfEXPdz5t+FbxCC5Rp2s+KbEO8w5wqMDPgj7CtFKZuzq7PXv28fZoXfqqBVuw==
+  version "5.30.3"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.30.3.tgz#f1bb68ded42408c316b548e3ec2526d7dd03f4d2"
+  integrity sha512-STdUgOUx8rLbMGO9IOwHLpCqolkDITFFQSMYYwKE1N2lY6MVSaeoi10z/EhWxRc6ybqoVmKSkhKYH/XUpl7vSA==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"
