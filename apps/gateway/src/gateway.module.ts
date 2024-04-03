@@ -5,7 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { ClientsModule } from '@nestjs/microservices';
 import { clientModuleConfig } from './core/configs/client-module.config';
-import { apolloGatewayDriverConfig } from '../../account/core/configs/apollo-gateway-driver.config';
+import { apolloGatewayDriverConfig } from './core/configs/apollo-gateway-driver.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot(gatewayEnvConfig()),

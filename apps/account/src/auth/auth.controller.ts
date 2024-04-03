@@ -5,7 +5,7 @@ import { LoginDto } from './dtos/login.dto';
 import { RegisterUserDto } from './dtos/register-user.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
-
+import { MessagePattern, Payload } from '@nestjs/microservices';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -32,5 +32,13 @@ export class AuthController {
     const userId = req.user['sub'];
     const refreshToken = req.user['refreshToken'];
     return this.authService.refreshTokens(userId, refreshToken);
+  }
+
+  @MessagePattern('authenticate')
+  async authenticate(@Payload() data: any) {
+    const payload = await this.authService.verifyAccessToken(
+      data.Authorization,
+    );
+    return payload;
   }
 }

@@ -9,12 +9,12 @@ export const authContext = async ({ req }) => {
     const authClient = app.get<ClientProxy>(ACCOUNT_SERVICE);
     const user = await lastValueFrom(
       authClient.send('authenticate', {
-        Authentication: req.headers?.authentication,
+        Authorization: req.headers?.authentication,
       }),
     );
 
     return { user };
   } catch (error) {
-    throw new UnauthorizedException(error);
+    throw new UnauthorizedException('User unauthorize');
   }
 };

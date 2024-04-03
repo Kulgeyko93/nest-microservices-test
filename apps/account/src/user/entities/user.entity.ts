@@ -26,7 +26,7 @@ export class UserEntity implements IUserModel {
   }
 
   public validateRefreshToken(refreshToken: string | null) {
-    if (!refreshToken || !this.refreshToken) return false;
+    if (!refreshToken) return false;
     return compare(refreshToken, this.refreshToken);
   }
 }

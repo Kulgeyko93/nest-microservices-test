@@ -1,7 +1,7 @@
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
-import { authContext } from '../../../gateway/src/auth.context';
 import { ConfigService } from '@nestjs/config';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
+import { authContext } from '../../auth.context';
 
 const configService = new ConfigService();
 

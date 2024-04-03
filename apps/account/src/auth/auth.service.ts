@@ -4,6 +4,7 @@ import {
   HttpStatus,
   BadRequestException,
   ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserUpdateEntity } from '../user/entities/user-update.entity';
@@ -42,12 +43,6 @@ export class AuthService {
 
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
 
-    await this.userRepository.update(
-      { id: newUser.id },
-      {
-        refreshToken: tokens.refreshToken,
-      },
-    );
     return tokens;
   }
 
@@ -127,5 +122,17 @@ export class AuthService {
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
+  }
+
+  async verifyAccessToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      });
+
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
   }
 }
