@@ -8,7 +8,7 @@ export const clientModuleConfig = (): ClientsModuleAsyncOptions => [
     useFactory: (configService: ConfigService) => ({
       options: {
         host: configService.get('ACCOUNT_HOST'),
-        port: configService.get('ACCOUNT_PORT'),
+        port: +configService.get('ACCOUNT_PORT'),
       },
     }),
     inject: [ConfigService],
