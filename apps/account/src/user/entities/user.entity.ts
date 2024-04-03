@@ -1,11 +1,11 @@
+import { IUserModel } from '@lib/common';
 import { compare, genSalt, hash } from 'bcrypt';
-import { IUserModel } from '../../../../../libs/common/src';
 
 export class UserEntity implements IUserModel {
   id: string;
   email: string;
   password: string;
-  refreshToken: string | null;
+  refreshToken: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -26,7 +26,7 @@ export class UserEntity implements IUserModel {
   }
 
   public validateRefreshToken(refreshToken: string | null) {
-    if (!refreshToken || !this.refreshToken) return false;
+    if (!refreshToken) return false;
     return compare(refreshToken, this.refreshToken);
   }
 }

@@ -1,17 +1,19 @@
+import { IUserModel } from '@lib/common';
 import {
-  Injectable,
-  HttpException,
-  HttpStatus,
   BadRequestException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { UserUpdateEntity } from '../user/entities/user-update.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserRepository } from '../user/repositories/user.repository';
-import { RegisterUserDto } from './dtos/register-user.dto';
-import { JwtService } from '@nestjs/jwt';
-import { IUserModel } from '@lib/common';
+import { LoginInput } from './inputs/login.input';
+import { RegisterUserInput } from './inputs/register-user.input';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +22,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
   ) {}
-  async register({ email, password }: RegisterUserDto) {
+  async register({ email, password }: RegisterUserInput) {
     const existUser = await this.userRepository.findOne({ email });
 
     if (existUser) {
@@ -30,7 +32,7 @@ export class AuthService {
     const newUserEntity = await new UserEntity({
       email,
       password: '',
-      refreshToken: null,
+      refreshToken: '',
     }).setPassword(password);
 
     const newUser = await this.userRepository.create(newUserEntity);
@@ -42,16 +44,10 @@ export class AuthService {
 
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
 
-    await this.userRepository.update(
-      { id: newUser.id },
-      {
-        refreshToken: tokens.refreshToken,
-      },
-    );
     return tokens;
   }
 
-  async signIn(email: string, password: string) {
+  async signIn({ email, password }: LoginInput) {
     const user = await this.userRepository.findOne({ email });
 
     if (!user) {
@@ -67,16 +63,17 @@ export class AuthService {
 
     const tokens = await this.getTokens({ id: user.id, email });
     await this.updateRefreshToken(user.id, tokens.refreshToken);
+
     return tokens;
   }
 
   async logout(userId: string) {
-    return this.userRepository.update({ id: userId }, { refreshToken: null });
+    return this.userRepository.update({ id: userId }, { refreshToken: '' });
   }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
     const updateEntity = new UserUpdateEntity();
-    updateEntity.setRefreshToken(refreshToken);
+    await updateEntity.setRefreshToken(refreshToken);
 
     await this.userRepository.update({ id: userId }, updateEntity);
   }
@@ -111,14 +108,15 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {
-    const user = await this.userRepository.findOne({ id: userId });
+  async refreshTokens(email: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({ email });
     if (!user || !user.refreshToken) {
       throw new ForbiddenException('Access Denied');
     }
 
-    const userEntity = await new UserEntity(user);
-    const refreshTokenMatches = userEntity.validateRefreshToken(refreshToken);
+    const userEntity = new UserEntity(user);
+    const refreshTokenMatches =
+      await userEntity.validateRefreshToken(refreshToken);
 
     if (!refreshTokenMatches) {
       throw new ForbiddenException('Access Denied');
@@ -127,5 +125,17 @@ export class AuthService {
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
+  }
+
+  async verifyAccessToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      });
+
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
   }
 }

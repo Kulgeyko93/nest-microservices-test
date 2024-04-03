@@ -34,4 +34,8 @@ export class UserRepository {
   ) {
     return this.userRepository.update(filter, payload);
   }
+
+  async remove(filter: Partial<NoUndefinedField<IUserModel>>) {
+    return this.userRepository.delete(filter);
+  }
 }
