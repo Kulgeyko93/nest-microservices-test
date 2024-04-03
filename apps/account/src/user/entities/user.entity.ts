@@ -1,5 +1,5 @@
+import { IUserModel } from '@lib/common';
 import { compare, genSalt, hash } from 'bcrypt';
-import { IUserModel } from '../../../../../libs/common/src';
 
 export class UserEntity implements IUserModel {
   id: string;
