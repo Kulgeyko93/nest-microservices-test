@@ -20,43 +20,30 @@ services:
     volumes:
       - ./volumes/postgres_init:/docker-entrypoint-initdb.d
       - ./volumes/postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   restart: always
-  #   container_name: nest-pgadmin4
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-  #     - PGADMIN_DEFAULT_PASSWORD=password
-  #   ports:
-  #     - '5055:80'
-  #   depends_on:
-  #     - postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - '5055:80'
+    volumes:
+      - ./volumes/pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - postgres
 
-  # account:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/account/Dockerfile
-  #   container_name: account-service
-  #   environment:
-  #     - PORT=3030
-  #     - JWT_SECRET=asdad12rr!@Fafafa
-  #     - JWT_ACCESS_SECRET=zxczsds!D321
-  #     - JWT_ACCESS_EXPIRES='15m'
-  #     - JWT_REFRESH_SECRET=!ASFwofnwog123
-  #     - JWT_REFRESH_EXPIRES='30d'
-  #     - PSQL_HOSTNAME=localhost
-  #     - PSQL_PORT=5433
-  #     - PSQL_DB_NAME=account-example
-  #     - PSQL_USERNAME=postgres
-  #     - PSQL_PASSWORD=12345678
-  #     - PSQL_LOGGING=false
-  #     - PSQL_SYNCHRONIZE=true
-
-
-  #   depends_on:
-  #     - postgres
-  #   volumes:
-  #     - .:/opt/src/app
 volumes:
-  pgdata:
+  postgres_data:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge
