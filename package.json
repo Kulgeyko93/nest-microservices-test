@@ -7,10 +7,11 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build-account": "nest start account --debug  --watch",
+    "build-account": "nest build account",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "dev-account": "nest start account --debug",
     "start:debug": "concurrently -c \"cyan.bold,green.bold,blue.bold,yellow.bold\" \"npm:debug-*\"",
     "debug-account": "nest start account --debug  --watch",
     "debug-gateway": "nest start gateway --debug  --watch",
