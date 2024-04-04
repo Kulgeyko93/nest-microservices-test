@@ -8,10 +8,12 @@
   "scripts": {
     "build": "nest build",
     "build-account": "nest build account",
+    "build-gateway": "nest build gateway",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "dev-account": "nest start account --debug",
+    "dev-gateway": "nest start gateway --debug",
     "start:debug": "concurrently -c \"cyan.bold,green.bold,blue.bold,yellow.bold\" \"npm:debug-*\"",
     "debug-account": "nest start account --debug  --watch",
     "debug-gateway": "nest start gateway --debug  --watch",
