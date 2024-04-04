@@ -64,6 +64,29 @@ services:
       - postgres
     networks:
       - backend
+  gateway:
+    build:
+      context: .
+      dockerfile: ./apps/gateway/Dockerfile
+    restart: always
+    command: yarn dev-gateway
+    container_name: gateway_container
+    environment:
+      - PORT=3004
+      - TCP_PORT=4004
+      - ACCOUNT_GRAPHQL_URL=http://account:3030/graphql
+      - ACCOUNT_HOST=account
+      - ACCOUNT_PORT=4030
+    ports:
+      - '3004:3004'
+      - '4004:4004'
+    volumes:
+      - .:/opt/src/app
+    depends_on:
+      - postgres
+      - account
+    networks:
+      - backend
 
 volumes:
   postgres_data:
