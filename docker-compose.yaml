@@ -21,7 +21,7 @@ services:
       - ./volumes/postgres_init:/docker-entrypoint-initdb.d
       - ./volumes/postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres
+      - backend
 
   pgadmin:
     image: dpage/pgadmin4
@@ -38,12 +38,32 @@ services:
     depends_on:
       - postgres
     networks:
+      - backend
+
+  account:
+    build:
+      context: .
+      dockerfile: ./apps/account/Dockerfile
+    restart: always
+    command: yarn dev-account
+    container_name: account_container
+    env_file:
+      - ./envs/.account.env
+    ports:
+      - '3030:3030'
+      - '4030:4030'
+    volumes:
+      - .:/opt/src/app
+      - /app/node_modules
+    depends_on:
       - postgres
+    networks:
+      - backend
 
 volumes:
   postgres_data:
   pgadmin-data:
 
 networks:
-  postgres:
+  backend:
     driver: bridge
