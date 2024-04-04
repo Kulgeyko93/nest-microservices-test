@@ -1,14 +1,74 @@
 version: "3.7"
 services:
-  postgres: 
-    image: postgres:16-alpine
-    container_name: posgres_db_account
-    ports:
-      - "5433:5432"
+  postgres:
+    container_name: postgres-db
+    image: postgres:16
+    restart: always
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=account-example
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      POSTGRES_DB: "account"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+      PGDATA: "/var/lib/postgresql/data/pgdata"   
+    ports:
+      - 5444:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d account"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     volumes:
+      - ./volumes/postgres_init:/docker-entrypoint-initdb.d
       - ./volumes/postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - '5055:80'
+    volumes:
+      - ./volumes/pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+  account:
+    build:
+      context: .
+      dockerfile: ./apps/account/Dockerfile
+    restart: always
+    command: yarn dev-account
+    container_name: account_container
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=account
+      - POSTGRES_LOGGING=true
+      - POSTGRES_SYNCHRONIZE=true
+    ports:
+      - '3030:3030'
+      - '4030:4030'
+    volumes:
+      - .:/opt/src/app
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  pgadmin-data:
+
+networks:
+  backend:
+    driver: bridge

@@ -3,15 +3,15 @@ import { z } from 'zod';
 import * as path from 'node:path';
 
 export const envSchema = z.object({
-  PSQL_HOSTNAME: z.string(),
-  PSQL_PORT: z.string(),
-  PSQL_DB_NAME: z.string(),
-  PSQL_USERNAME: z.string(),
-  PSQL_PASSWORD: z.string(),
-  PSQL_LOGGING: z
+  POSTGRES_HOST: z.string(),
+  POSTGRES_PORT: z.string(),
+  POSTGRES_USER: z.string(),
+  POSTGRES_PASSWORD: z.string(),
+  POSTGRES_DB: z.string(),
+  POSTGRES_LOGGING: z
     .enum(['true', 'false'])
     .transform((value) => value === 'true'),
-  PSQL_SYNCHRONIZE: z
+  POSTGRES_SYNCHRONIZE: z
     .enum(['true', 'false'])
     .transform((value) => value === 'true'),
 });
