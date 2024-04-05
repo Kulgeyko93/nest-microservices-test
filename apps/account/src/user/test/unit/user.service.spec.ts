@@ -43,7 +43,7 @@ describe('UserService', () => {
       await service.verifyUser(mockUser.email, mockUser.password);
     } catch (error) {
       expect(error).toHaveProperty('name', 'NotFoundException');
-      expect(error).toHaveProperty('message', 'Document was not found');
+      expect(error).toHaveProperty('message', "User doest't exist");
     }
   });
 
