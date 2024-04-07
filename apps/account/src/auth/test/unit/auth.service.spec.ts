@@ -31,17 +31,6 @@ describe('AuthService', () => {
         AuthService,
         ConfigService,
         JwtService,
-        // {
-        //   provide: ConfigService,
-        //   useValue: jest.fn((key: string) => {
-        //     if (key === 'JWT_ACCESS_SECRET') return 'JWT_ACCESS_SECRET';
-        //     if (key === 'JWT_ACCESS_EXPIRES') return 'JWT_ACCESS_EXPIRES';
-        //     if (key === 'JWT_REFRESH_SECRET') return 'JWT_REFRESH_SECRET';
-        //     if (key === 'JWT_REFRESH_EXPIRES') return 'JWT_REFRESH_EXPIRES';
-
-        //     return null;
-        //   }),
-        // },
         {
           provide: UserRepository,
           useValue: {
