@@ -62,36 +62,38 @@ describe('AuthService', () => {
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
-  it('register is working', async () => {
-    jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
-      return null;
-    });
+  describe('register method', () => {
+    it('register is working', async () => {
+      jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
+        return null;
+      });
 
-    jest.spyOn(userRepository, 'create').mockImplementation(async () => {
-      return mockUser as UserModel;
-    });
+      jest.spyOn(userRepository, 'create').mockImplementation(async () => {
+        return mockUser as UserModel;
+      });
 
-    jest.spyOn(service, 'getTokens').mockResolvedValue(mockTokens);
+      jest.spyOn(service, 'getTokens').mockResolvedValue(mockTokens);
 
-    jest.spyOn(service, 'updateRefreshToken').mockResolvedValue();
-
-    const res = await service.register(mockUser);
-
-    expect(res).toEqual(mockTokens);
-  });
-
-  it('register is error "exist user"', async () => {
-    try {
-      jest
-        .spyOn(userRepository, 'findOne')
-        .mockImplementation(async () => mockUser);
+      jest.spyOn(service, 'updateRefreshToken').mockResolvedValue();
 
       const res = await service.register(mockUser);
 
       expect(res).toEqual(mockTokens);
-    } catch (error) {
-      expect(error).toHaveProperty('name', 'BadRequestException');
-      expect(error).toHaveProperty('message', 'User exists');
-    }
+    });
+
+    it('register is error "exist user"', async () => {
+      try {
+        jest
+          .spyOn(userRepository, 'findOne')
+          .mockImplementation(async () => mockUser);
+
+        const res = await service.register(mockUser);
+
+        expect(res).toEqual(mockTokens);
+      } catch (error) {
+        expect(error).toHaveProperty('name', 'BadRequestException');
+        expect(error).toHaveProperty('message', 'User exists');
+      }
+    });
   });
 });
