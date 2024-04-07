@@ -4,9 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '../../../user/repositories/user.repository';
 import { IUserModel } from '@lib/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from '../../../user/entities/user.entity';
 import { UserModel } from '../../../user/models/user.model';
-// import { UserEntity } from '../../../user/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
