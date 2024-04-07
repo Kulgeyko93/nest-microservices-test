@@ -3,11 +3,14 @@ import { AuthService } from '../../auth.service';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '../../../user/repositories/user.repository';
 import { IUserModel } from '@lib/common';
+import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../../../user/entities/user.entity';
+import { UserModel } from '../../../user/models/user.model';
+// import { UserEntity } from '../../../user/entities/user.entity';
 
-describe('UserService', () => {
+describe('AuthService', () => {
   let service: AuthService;
-  let config: ConfigService;
+  // let config: ConfigService;
   let userRepository: UserRepository;
 
   const mockTokens = {
@@ -28,17 +31,19 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        {
-          provide: ConfigService,
-          useValue: jest.fn((key: string) => {
-            if (key === 'JWT_ACCESS_SECRET') return 'JWT_ACCESS_SECRET';
-            if (key === 'JWT_ACCESS_EXPIRES') return 'JWT_ACCESS_EXPIRES';
-            if (key === 'JWT_REFRESH_SECRET') return 'JWT_REFRESH_SECRET';
-            if (key === 'JWT_REFRESH_EXPIRES') return 'JWT_REFRESH_EXPIRES';
+        ConfigService,
+        JwtService,
+        // {
+        //   provide: ConfigService,
+        //   useValue: jest.fn((key: string) => {
+        //     if (key === 'JWT_ACCESS_SECRET') return 'JWT_ACCESS_SECRET';
+        //     if (key === 'JWT_ACCESS_EXPIRES') return 'JWT_ACCESS_EXPIRES';
+        //     if (key === 'JWT_REFRESH_SECRET') return 'JWT_REFRESH_SECRET';
+        //     if (key === 'JWT_REFRESH_EXPIRES') return 'JWT_REFRESH_EXPIRES';
 
-            return null;
-          }),
-        },
+        //     return null;
+        //   }),
+        // },
         {
           provide: UserRepository,
           useValue: {
@@ -53,23 +58,18 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    config = module.get<ConfigService>(ConfigService);
+    // config = module.get<ConfigService>(ConfigService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
   it('register is working', async () => {
-    const mockUserWithPassword = await new UserEntity(mockUser).setPassword(
-      mockUser.password,
-    );
+    jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
+      return null;
+    });
 
-    jest
-      .spyOn(userRepository, 'findOne')
-      .mockImplementation(async (payload: Partial<IUserModel>) => {
-        return {
-          ...mockUserWithPassword,
-          ...payload,
-        };
-      });
+    jest.spyOn(userRepository, 'create').mockImplementation(async () => {
+      return mockUser as UserModel;
+    });
 
     jest.spyOn(service, 'getTokens').mockResolvedValue(mockTokens);
 
@@ -78,5 +78,20 @@ describe('UserService', () => {
     const res = await service.register(mockUser);
 
     expect(res).toEqual(mockTokens);
+  });
+
+  it('register is error "exist user"', async () => {
+    try {
+      jest
+        .spyOn(userRepository, 'findOne')
+        .mockImplementation(async () => mockUser);
+
+      const res = await service.register(mockUser);
+
+      expect(res).toEqual(mockTokens);
+    } catch (error) {
+      expect(error).toHaveProperty('name', 'BadRequestException');
+      expect(error).toHaveProperty('message', 'User exists');
+    }
   });
 });
