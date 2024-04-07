@@ -9,8 +9,6 @@ import { UserEntity } from '../../../user/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let config: ConfigService;
-  let jwtService: JwtService;
   let userRepository: UserRepository;
 
   const mockTokens = {
@@ -56,8 +54,6 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    config = module.get<ConfigService>(ConfigService);
-    jwtService = module.get<JwtService>(JwtService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
@@ -80,7 +76,7 @@ describe('AuthService', () => {
       expect(res).toEqual(mockTokens);
     });
 
-    it('register is error "exist user"', async () => {
+    it('register sends error "exist user"', async () => {
       try {
         jest
           .spyOn(userRepository, 'findOne')
@@ -98,23 +94,6 @@ describe('AuthService', () => {
 
   describe('refreshTokens method', () => {
     it('refreshTokens is working', async () => {
-      // const JWT_REFRESH_SECRET =
-      //   config.get('JWT_REFRESH_SECRET').JWT_REFRESH_SECRET;
-      // const JWT_REFRESH_EXPIRES = config.get(
-      //   'JWT_REFRESH_EXPIRES',
-      // ).JWT_REFRESH_EXPIRES;
-
-      // const mockRefreshToken = await jwtService.signAsync(
-      //   {
-      //     sub: mockUser.id,
-      //     email: mockUser.email,
-      //   },
-      //   {
-      //     secret: JWT_REFRESH_SECRET,
-      //     expiresIn: JWT_REFRESH_EXPIRES,
-      //   },
-      // );
-
       const hashedMockUserRefreshToken = (
         await new UserEntity(mockUser).setPassword(mockUser.refreshToken)
       ).password;
@@ -136,6 +115,57 @@ describe('AuthService', () => {
       );
 
       expect(res).toEqual(mockTokens);
+    });
+
+    it('refreshTokens sends error "Access Denied". didn\'t exist user', async () => {
+      try {
+        jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
+          return null;
+        });
+        await service.refreshTokens(mockUser.email, mockUser.password);
+      } catch (error) {
+        expect(error).toHaveProperty('name', 'ForbiddenException');
+        expect(error).toHaveProperty('message', 'Access Denied');
+      }
+    });
+
+    it('refreshTokens sends error "Access Denied". didn\'t exist token', async () => {
+      try {
+        jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
+          return {
+            ...mockUser,
+            refreshToken: 'hashedMockUserRefreshToken',
+          };
+        });
+        await service.refreshTokens(mockUser.email, '');
+      } catch (error) {
+        expect(error).toHaveProperty('name', 'ForbiddenException');
+        expect(error).toHaveProperty('message', 'Access Denied');
+      }
+    });
+
+    it('refreshTokens sends error "Access Denied". didn\'t exist token', async () => {
+      try {
+        const hashedMockUserRefreshToken = (
+          await new UserEntity(mockUser).setPassword(mockUser.refreshToken)
+        ).password;
+
+        jest.spyOn(userRepository, 'findOne').mockImplementation(async () => {
+          return {
+            ...mockUser,
+            refreshToken: hashedMockUserRefreshToken,
+          };
+        });
+
+        jest.spyOn(service, 'updateRefreshToken').mockResolvedValue();
+
+        jest.spyOn(service, 'getTokens').mockResolvedValue(mockTokens);
+
+        await service.refreshTokens(mockUser.email, mockUser.password + '2');
+      } catch (error) {
+        expect(error).toHaveProperty('name', 'ForbiddenException');
+        expect(error).toHaveProperty('message', 'Access Denied');
+      }
     });
   });
 });
