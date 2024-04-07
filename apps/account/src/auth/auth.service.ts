@@ -2,8 +2,6 @@ import { IUserModel } from '@lib/common';
 import {
   BadRequestException,
   ForbiddenException,
-  HttpException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -26,7 +24,7 @@ export class AuthService {
     const existUser = await this.userRepository.findOne({ email });
 
     if (existUser) {
-      throw new HttpException('User exists', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('User exists');
     }
 
     const newUserEntity = await new UserEntity({
