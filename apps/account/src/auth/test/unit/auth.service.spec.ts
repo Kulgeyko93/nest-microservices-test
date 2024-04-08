@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../../auth.service';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '../../../user/repositories/user.repository';
-import { IUserModel } from '@lib/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserModel } from '../../../user/models/user.model';
 import { UserEntity } from '../../../user/entities/user.entity';
+import { getMockUserData } from '../../../user/test/unit/mock-parameters';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -16,14 +16,7 @@ describe('AuthService', () => {
     refreshToken: 'refreshToken',
   };
 
-  const mockUser: IUserModel = {
-    id: '123',
-    email: '123',
-    password: '123',
-    refreshToken: '123',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+  const mockUser = getMockUserData();
 
   beforeEach(async () => {
     jest.setTimeout(60000);

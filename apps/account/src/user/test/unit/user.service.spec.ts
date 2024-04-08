@@ -2,19 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
 import { UserRepository } from '../../repositories/user.repository';
 import { UserEntity } from '../../entities/user.entity';
+import { getMockUserData } from './mock-parameters';
 
 describe('UserService', () => {
   let service: UserService;
 
-  const mockUser = {
-    id: '123',
-    email: '123',
-    password: '123',
-    refreshToken: '123',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
+  const mockUser = getMockUserData();
   const mockUserRepository = {
     create: jest.fn(),
     find: jest.fn(),
@@ -37,7 +30,7 @@ describe('UserService', () => {
     service = module.get<UserService>(UserService);
   });
 
-  it('verifyUser is "not found exception"', async () => {
+  it('verifyUser has error "not found exception"', async () => {
     try {
       mockUserRepository.findOne.mockReturnValue(null);
       await service.verifyUser(mockUser.email, mockUser.password);
@@ -47,7 +40,7 @@ describe('UserService', () => {
     }
   });
 
-  it('verifyUser is invalid password', async () => {
+  it('verifyUser has invalid password', async () => {
     try {
       const passwordWithPostfix = mockUser.password + '123';
       const mockPassword = (
@@ -67,7 +60,7 @@ describe('UserService', () => {
     }
   });
 
-  it('verifyUser is invalid password', async () => {
+  it('verifyUser has invalid password', async () => {
     const passwordWithPostfix = mockUser.password;
     const mockPassword = (
       await new UserEntity(mockUser).setPassword(passwordWithPostfix)
