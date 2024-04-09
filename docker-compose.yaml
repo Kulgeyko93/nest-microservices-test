@@ -2,7 +2,7 @@ version: "3.7"
 services:
   redis:
     image: redis:7.0-alpine
-    container_name: cache
+    container_name: redis
     restart: always
     ports:
       - 6379:6379
@@ -65,6 +65,10 @@ services:
       - POSTGRES_DB=account
       - POSTGRES_LOGGING=true
       - POSTGRES_SYNCHRONIZE=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=password
+      - REDIS_TTL=5000
     ports:
       - '3030:3030'
       - '4030:4030'
@@ -72,6 +76,7 @@ services:
       - .:/opt/src/app
     depends_on:
       - postgres
+      - redis
     networks:
       - backend
   gateway:
