@@ -1,7 +1,9 @@
 import { IUserModel } from '@lib/common';
 import { compare, genSalt, hash } from 'bcryptjs';
 
-export class UserEntity implements IUserModel {
+export class UserEntity
+  implements Pick<IUserModel, 'email' | 'password' | 'refreshToken'>
+{
   id: string;
   email: string;
   password: string;
