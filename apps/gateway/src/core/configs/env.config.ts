@@ -4,6 +4,7 @@ import * as path from 'node:path';
 
 export const envSchema = z.object({
   PORT: z.string(),
+  X_API_KEY: z.string(),
 
   ACCOUNT_GRAPHQL_URL: z.string(),
   FEED_GRAPHQL_URL: z.string(),
