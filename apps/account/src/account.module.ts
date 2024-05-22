@@ -2,8 +2,6 @@ import { ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { AccountController } from './account.controller';
-import { AccountService } from './account.service';
 import { AuthModule } from './auth/auth.module';
 import { accountEnvConfig } from './auth/core/configs/env.config';
 import { UserModule } from './user/user.module';
@@ -16,7 +14,5 @@ import { accountGraphqlConfig } from './auth/core/configs/graphql-account.config
     UserModule,
     AuthModule,
   ],
-  controllers: [AccountController],
-  providers: [AccountService],
 })
 export class AccountModule {}
