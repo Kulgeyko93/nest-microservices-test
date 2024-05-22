@@ -1,23 +1,12 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { IUserModel } from '@lib/common';
+import { Column, Entity, OneToOne } from 'typeorm';
+import { IFileModel, IUserModel } from '@lib/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { FileModel } from '@apps/feed/src/modules/upload/models/file.model';
+import { BaseModel } from '@lib/common';
 
 @Entity('user')
 @ObjectType()
-export class UserModel extends BaseEntity implements IUserModel {
-  @PrimaryGeneratedColumn('uuid')
-  @Field()
-  id: string;
-
+export class UserModel extends BaseModel implements IUserModel {
   @Column({
     type: 'varchar',
     nullable: false,
@@ -33,22 +22,14 @@ export class UserModel extends BaseEntity implements IUserModel {
   @Field()
   password: string;
 
+  @Field({ nullable: true })
   @Column({
     type: 'varchar',
     nullable: true,
   })
-  @Field({ nullable: true })
   refreshToken: string;
 
-  @OneToOne(() => FileModel)
   @Field({ nullable: true })
-  fileId: string;
-
-  @CreateDateColumn()
-  @Field()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  @Field()
-  updatedAt: Date;
+  @OneToOne(() => FileModel, (file) => file.user)
+  avatar: IFileModel;
 }
