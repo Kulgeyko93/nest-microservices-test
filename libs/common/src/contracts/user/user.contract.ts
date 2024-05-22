@@ -6,7 +6,7 @@ export interface IUserModel {
   password: string;
   refreshToken: string;
 
-  avatar: IFileModel;
+  avatar?: IFileModel;
 
   createdAt: Date;
   updatedAt: Date;

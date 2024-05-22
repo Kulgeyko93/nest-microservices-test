@@ -15,7 +15,7 @@ export class FileModel extends BaseModel implements IFileModel {
   @Column()
   type: string;
 
-  @Field(() => UserModel)
+  @Field(() => UserModel, { nullable: true })
   @OneToOne(() => UserModel, (user) => user.avatar)
   @JoinColumn()
   user: UserModel;

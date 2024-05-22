@@ -6,16 +6,16 @@ import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-clas
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      useFactory: (configServie: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configServie.get<string>('POSTGRES_HOST'),
-        port: configServie.get<number>('POSTGRES_PORT'),
-        database: configServie.get<string>('POSTGRES_DB'),
-        username: configServie.get<string>('POSTGRES_USER'),
-        password: configServie.get<string>('POSTGRES_PASSWORD'),
+        host: configService.get<string>('POSTGRES_HOST'),
+        port: configService.get<number>('POSTGRES_PORT'),
+        database: configService.get<string>('POSTGRES_DB'),
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
         autoLoadEntities: true,
-        logging: configServie.get<boolean>('POSTGRES_LOGGING'),
-        synchronize: configServie.get<boolean>('POSTGRES_SYNCHRONIZE'),
+        logging: configService.get<boolean>('POSTGRES_LOGGING'),
+        synchronize: configService.get<boolean>('POSTGRES_SYNCHRONIZE'),
       }),
       inject: [ConfigService],
     }),
