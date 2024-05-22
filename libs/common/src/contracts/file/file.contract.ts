@@ -1,11 +1,12 @@
-import { IUserModel } from '../user/user.contract';
+import { IUserEntityContract } from '../user/user.contract';
 
-export interface IFileModel {
+export interface FileEntityContract {
   id: string;
   fileUrl: string;
   type: string;
 
-  user?: IUserModel;
+  userId: string;
+  user?: IUserEntityContract;
 
   createdAt: Date;
   updatedAt: Date;

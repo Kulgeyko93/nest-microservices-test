@@ -3,8 +3,8 @@ import { AuthService } from '../../auth.service';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '../../../user/repositories/user.repository';
 import { JwtService } from '@nestjs/jwt';
-import { UserModel } from '../../../user/models/user.model';
-import { UserEntity } from '../../../user/entities/user.entity';
+import { UserModel } from '../../../user/entities/user.model';
+import { UserEntity } from '../../../user/entity-components/user.entity';
 import { getMockUserData } from '../../../user/test/unit/mock-parameters';
 
 describe('AuthService', () => {

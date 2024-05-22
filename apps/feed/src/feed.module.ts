@@ -1,10 +1,8 @@
+import { ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { FeedController } from './feed.controller';
-import { FeedService } from './feed.service';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { feedEnvConfig } from './core/configs/env.config';
-import { ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { feedGraphqlConfig } from './core/configs/graphql-account.config';
 import { UploadModule } from './modules/upload/upload.module';
 
@@ -14,7 +12,5 @@ import { UploadModule } from './modules/upload/upload.module';
     GraphQLModule.forRoot<ApolloFederationDriverConfig>(feedGraphqlConfig()),
     UploadModule,
   ],
-  controllers: [FeedController],
-  providers: [FeedService],
 })
 export class FeedModule {}

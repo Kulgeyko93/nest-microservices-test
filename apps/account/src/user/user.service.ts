@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserRepository } from './repositories/user.repository';
-import { UserEntity } from './entities/user.entity';
+import { UserEntityEC } from './entity-components/user.ec';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
       throw new NotFoundException("User doest't exist");
     }
 
-    const userEntity = new UserEntity(user);
+    const userEntity = new UserEntityEC(user);
     const passwordIsValid = userEntity.validatePassword(password);
 
     if (!passwordIsValid) {
