@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from 'bcryptjs';
 
-export class UserUpdateEntity {
+export class UserUpdateEC {
   id: string;
   email: string;
   password: string;

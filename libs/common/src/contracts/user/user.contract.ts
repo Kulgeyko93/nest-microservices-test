@@ -1,12 +1,12 @@
-import { IFileModel } from '../file/file.contract';
+import { FileEntityContract } from '../file/file.contract';
 
-export interface IUserModel {
+export interface IUserEntityContract {
   id: string;
   email: string;
   password: string;
   refreshToken: string;
 
-  avatar?: IFileModel;
+  avatar?: FileEntityContract;
 
   createdAt: Date;
   updatedAt: Date;
