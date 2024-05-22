@@ -9,7 +9,7 @@ export const envSchema = z.object({
 export const feedEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(process.cwd(), 'envs', '.account.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.feed.env'),
 });
 
 export type FeedEnv = z.infer<typeof envSchema>;
