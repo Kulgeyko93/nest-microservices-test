@@ -50,58 +50,58 @@ services:
     networks:
       - backend
 
-  account:
-    build:
-      context: .
-      dockerfile: ./apps/account/Dockerfile
-    restart: always
-    command: yarn dev-account
-    container_name: account_container
-    environment:
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=account
-      - POSTGRES_LOGGING=true
-      - POSTGRES_SYNCHRONIZE=true
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=password
-      - REDIS_TTL=5000
-    ports:
-      - '3030:3030'
-      - '4030:4030'
-    volumes:
-      - .:/opt/src/app
-    depends_on:
-      - postgres
-      - redis
-    networks:
-      - backend
-  gateway:
-    build:
-      context: .
-      dockerfile: ./apps/gateway/Dockerfile
-    restart: always
-    command: yarn dev-gateway
-    container_name: gateway_container
-    environment:
-      - PORT=3004
-      - TCP_PORT=4004
-      - ACCOUNT_GRAPHQL_URL=http://account:3030/graphql
-      - ACCOUNT_HOST=account
-      - ACCOUNT_PORT=4030
-    ports:
-      - '3004:3004'
-      - '4004:4004'
-    volumes:
-      - .:/opt/src/app
-    depends_on:
-      - postgres
-      - account
-    networks:
-      - backend
+  # account:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/account/Dockerfile
+  #   restart: always
+  #   command: yarn dev-account
+  #   container_name: account_container
+  #   environment:
+  #     - POSTGRES_HOST=postgres
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_USER=user
+  #     - POSTGRES_PASSWORD=password
+  #     - POSTGRES_DB=account
+  #     - POSTGRES_LOGGING=true
+  #     - POSTGRES_SYNCHRONIZE=true
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_TTL=5000
+  #   ports:
+  #     - '3030:3030'
+  #     - '4030:4030'
+  #   volumes:
+  #     - .:/opt/src/app
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - backend
+  # gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/gateway/Dockerfile
+  #   restart: always
+  #   command: yarn dev-gateway
+  #   container_name: gateway_container
+  #   environment:
+  #     - PORT=3004
+  #     - TCP_PORT=4004
+  #     - ACCOUNT_GRAPHQL_URL=http://account:3030/graphql
+  #     - ACCOUNT_HOST=account
+  #     - ACCOUNT_PORT=4030
+  #   ports:
+  #     - '3004:3004'
+  #     - '4004:4004'
+  #   volumes:
+  #     - .:/opt/src/app
+  #   depends_on:
+  #     - postgres
+  #     - account
+  #   networks:
+  #     - backend
 
 volumes:
   postgres_data:
