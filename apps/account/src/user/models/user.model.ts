@@ -29,7 +29,7 @@ export class UserModel extends BaseModel implements IUserModel {
   })
   refreshToken: string;
 
-  @Field({ nullable: true })
+  @Field(() => FileModel, { nullable: true })
   @OneToOne(() => FileModel, (file) => file.user)
   avatar: IFileModel;
 }
