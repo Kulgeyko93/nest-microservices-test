@@ -1,40 +1,22 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { IFileModel } from '@lib/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { UserModel } from '@apps/account/src/user/models/user.model';
+import { BaseModel } from '@lib/common';
 
 @Entity('user')
 @ObjectType()
-export class FileModel extends BaseEntity implements IFileModel {
-  @PrimaryGeneratedColumn('uuid')
-  @Field()
-  id: string;
-
-  @Column()
+export class FileModel extends BaseModel implements IFileModel {
   @Field({ description: 'Post Image' })
+  @Column()
   fileUrl: string;
 
-  @Column()
   @Field({ description: 'File type' })
+  @Column()
   type: string;
 
   @Field(() => UserModel)
-  @OneToOne(() => UserModel)
-  profile: UserModel;
-
-  @CreateDateColumn()
-  @Field()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  @Field()
-  updatedAt: Date;
+  @OneToOne(() => UserModel, (user) => user.avatar)
+  @JoinColumn()
+  user: UserModel;
 }
