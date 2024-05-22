@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserRepository } from '../../repositories/user.repository';
 import { Repository } from 'typeorm';
-import { UserModel } from '../../models/user.model';
+import { UserModel } from '../../entities/user.model';
 import { MockType } from '../../repositories/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 

@@ -2,6 +2,7 @@ import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { ConfigService } from '@nestjs/config';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { authContext } from '../../auth.context';
+import { ServicesGatewayPaths } from '@lib/common';
 
 const configService = new ConfigService();
 
@@ -15,12 +16,16 @@ export const apolloGatewayDriverConfig = (): ApolloGatewayDriverConfig => {
       supergraphSdl: new IntrospectAndCompose({
         subgraphs: [
           {
-            name: 'accounts',
-            url: configService.get<string>('ACCOUNT_GRAPHQL_URL'),
+            name: 'account',
+            url:
+              configService.get<string>('ACCOUNT_GRAPHQL_URL') +
+              `/${ServicesGatewayPaths.ACCOUNT_SERVICE}`,
           },
           {
             name: 'feed',
-            url: configService.get<string>('FEED_GRAPHQL_URL'),
+            url:
+              configService.get<string>('FEED_GRAPHQL_URL') +
+              `/${ServicesGatewayPaths.FEED_SERVICE}`,
           },
         ],
       }),

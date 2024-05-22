@@ -1,8 +1,8 @@
-import { IUserModel } from '@lib/common';
+import { IUserEntityContract } from '@lib/common';
 import { compare, genSalt, hash } from 'bcryptjs';
 
-export class UserEntity
-  implements Pick<IUserModel, 'email' | 'password' | 'refreshToken'>
+export class UserEntityEC
+  implements Pick<IUserEntityContract, 'email' | 'password' | 'refreshToken'>
 {
   id: string;
   email: string;
@@ -11,7 +11,9 @@ export class UserEntity
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(user: Pick<IUserModel, 'email' | 'password' | 'refreshToken'>) {
+  constructor(
+    user: Pick<IUserEntityContract, 'email' | 'password' | 'refreshToken'>,
+  ) {
     this.email = user.email;
     this.password = user.password;
     this.refreshToken = user.refreshToken;

@@ -1,4 +1,4 @@
-import { IUserModel } from '@lib/common';
+import { IUserEntityContract } from '@lib/common';
 import {
   BadRequestException,
   ForbiddenException,
@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserUpdateEntity } from '../user/entities/user-update.entity';
-import { UserEntity } from '../user/entities/user.entity';
+import { UserUpdateEC } from '../user/entity-components/user-update.ec';
+import { UserEntityEC } from '../user/entity-components/user.ec';
 import { UserRepository } from '../user/repositories/user.repository';
 import { LoginInput } from './inputs/login.input';
 import { RegisterUserInput } from './inputs/register-user.input';
@@ -27,7 +27,7 @@ export class AuthService {
       throw new BadRequestException('User exists');
     }
 
-    const newUserEntity = await new UserEntity({
+    const newUserEntity = await new UserEntityEC({
       email,
       password: '',
       refreshToken: '',
@@ -52,7 +52,7 @@ export class AuthService {
       throw new BadRequestException('User does not exist');
     }
 
-    const userEntity = new UserEntity(user);
+    const userEntity = new UserEntityEC(user);
     const isCorrectPassword = await userEntity.validatePassword(password);
 
     if (!isCorrectPassword) {
@@ -70,13 +70,13 @@ export class AuthService {
   }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
-    const updateEntity = new UserUpdateEntity();
+    const updateEntity = new UserUpdateEC();
     await updateEntity.setRefreshToken(refreshToken);
 
     await this.userRepository.update({ id: userId }, updateEntity);
   }
 
-  async getTokens({ id, email }: Pick<IUserModel, 'id' | 'email'>) {
+  async getTokens({ id, email }: Pick<IUserEntityContract, 'id' | 'email'>) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -112,7 +112,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const userEntity = new UserEntity(user);
+    const userEntity = new UserEntityEC(user);
     const refreshTokenMatches =
       await userEntity.validateRefreshToken(refreshToken);
 

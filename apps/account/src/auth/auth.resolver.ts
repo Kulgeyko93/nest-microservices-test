@@ -1,7 +1,7 @@
-import { CurrentGqlUser, IUserModel } from '@lib/common';
+import { CurrentGqlUser, IUserEntityContract } from '@lib/common';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UserModel } from '../user/models/user.model';
+import { UserEntity } from '../user/entities/user.model';
 import { AuthService } from './auth.service';
 import { JwtTokens } from './core/object-types/jwt.object-type';
 import { GqlAuthAccessTokenGuard } from './guards/gql-auth-access-token.guard';
@@ -24,8 +24,8 @@ export class AuthResolver {
   }
 
   @UseGuards(GqlAuthAccessTokenGuard)
-  @Query(() => UserModel)
-  async logout(@CurrentGqlUser() user: IUserModel) {
+  @Query(() => UserEntity)
+  async logout(@CurrentGqlUser() user: IUserEntityContract) {
     this.authService.logout(user.id);
     return user;
   }
@@ -33,7 +33,7 @@ export class AuthResolver {
   @UseGuards(GqlAuthRefreshTokenGuard)
   @Query(() => JwtTokens)
   async refreshTokens(
-    @CurrentGqlUser() user: Pick<IUserModel, 'email' | 'refreshToken'>,
+    @CurrentGqlUser() user: Pick<IUserEntityContract, 'email' | 'refreshToken'>,
   ) {
     const { email, refreshToken } = user;
 

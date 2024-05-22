@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
 import { UserRepository } from '../../repositories/user.repository';
-import { UserEntity } from '../../entities/user.entity';
+import { UserEntity } from '../../entity-components/user.entity';
 import { getMockUserData } from './mock-parameters';
 
 describe('UserService', () => {
