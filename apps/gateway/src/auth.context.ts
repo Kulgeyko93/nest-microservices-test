@@ -1,19 +1,17 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { ACCOUNT_SERVICE } from '@lib/common';
-import { app } from './app';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
 
 export const authContext = async ({ req }) => {
   try {
-    const authClient = app.get<ClientProxy>(ACCOUNT_SERVICE);
-    const user = await lastValueFrom(
-      authClient.send('authenticate', {
-        Authorization: req.headers?.authentication,
-      }),
-    );
+    const xApiKey = process.env.X_API_KEY;
+    if (
+      !req.headers ||
+      !req.headers['x-api-key'] ||
+      req.headers['x-api-key'] !== xApiKey
+    ) {
+      throw new Error();
+    }
 
-    return { user };
+    return true;
   } catch (error) {
     throw new UnauthorizedException('User unauthorize');
   }
