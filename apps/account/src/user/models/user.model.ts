@@ -3,11 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IUserModel } from '@lib/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { FileModel } from '@apps/feed/src/modules/upload/models/file.model';
 
 @Entity('user')
 @ObjectType()
@@ -37,6 +39,10 @@ export class UserModel extends BaseEntity implements IUserModel {
   })
   @Field({ nullable: true })
   refreshToken: string;
+
+  @OneToOne(() => FileModel)
+  @Field({ nullable: true })
+  fileId: string;
 
   @CreateDateColumn()
   @Field()
