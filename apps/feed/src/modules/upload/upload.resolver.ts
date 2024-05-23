@@ -7,12 +7,10 @@ import Upload = require('graphql-upload/Upload.js');
 export class UploadResolver {
   @Mutation(() => Boolean)
   async singleFileUpload(
-    @Args('file', { type: () => GraphQLUpload })
-    { createReadStream, filename, mimetype }: GraphQLUpload,
+    @Args('avatar', { type: () => GraphQLUpload })
+    dto: GraphQLUpload,
   ) {
-    console.log(filename);
-    console.log(filename);
-    console.log(filename);
+    console.log('filename');
     return true;
   }
 }
