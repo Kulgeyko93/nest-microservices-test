@@ -5,6 +5,6 @@ import { DatabaseModule } from '@lib/common';
 
 @Module({
   imports: [DatabaseModule, DatabaseModule.forFeature([FileEntity])],
-  providers: [UploadController],
+  controllers: [UploadController],
 })
 export class UploadModule {}
