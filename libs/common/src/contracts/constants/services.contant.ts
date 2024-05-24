@@ -5,3 +5,7 @@ export enum ServicesGatewayPaths {
 export enum MicroservicesNames {
   ACCOUNT_MS = 'account-microservice',
 }
+
+export enum AccountMessageNames {
+  Authenticate = 'authenticate',
+}
