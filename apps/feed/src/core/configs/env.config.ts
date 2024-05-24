@@ -4,6 +4,8 @@ import * as path from 'node:path';
 
 export const envSchema = z.object({
   HTTP_PORT: z.string(),
+  ACCOUNT_HOST: z.string(),
+  ACCOUNT_PORT: z.string(),
 });
 
 export const feedEnvConfig = (): ConfigModuleOptions => ({
