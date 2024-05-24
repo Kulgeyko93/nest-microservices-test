@@ -4,3 +4,4 @@ export * from './contracts';
 export * from './interfaces';
 export * from './database';
 export * from './decorators';
+export * from './middlewares';
