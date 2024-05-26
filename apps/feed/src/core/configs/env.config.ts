@@ -9,6 +9,8 @@ export const envSchema = z.object({
 
   MINIO_ROOT_USER: z.string(),
   MINIO_ROOT_PASSWORD: z.string(),
+  MINIO_ENDPOINT: z.string(),
+  MINIO_PORT: z.number(),
   MINIO_ACCESS_KEY: z.string(),
   MINIO_ACCESS_SECRET: z.string(),
 });
