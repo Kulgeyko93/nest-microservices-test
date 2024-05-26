@@ -1,5 +1,10 @@
 import { ConfigService } from '@nestjs/config';
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  HttpException,
+  BadRequestException,
+} from '@nestjs/common';
 import { MinioService } from 'nestjs-minio-client';
 
 import * as crypto from 'crypto';
@@ -9,10 +14,6 @@ import { BufferedFile } from './helpers/interfaces';
 export class MinioClientService {
   private readonly logger: Logger;
 
-  public get client() {
-    return this.minio.client;
-  }
-
   constructor(
     private readonly configService: ConfigService,
     private readonly minio: MinioService,
@@ -20,10 +21,23 @@ export class MinioClientService {
     this.logger = new Logger('MinioStorageService');
   }
 
+  async findOrCreateBucket(bucket: string) {
+    const exists = await this.minio.client.bucketExists(bucket);
+    if (!exists) {
+      return await this.createBucket(bucket);
+    }
+  }
+
+  async createBucket(bucket: string) {
+    await this.minio.client.makeBucket(bucket, 'us-east-1');
+  }
+
   public async upload(file: BufferedFile, baseBucket: string) {
     if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
-      throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Error uploading file');
     }
+
+    await this.findOrCreateBucket(baseBucket);
 
     const temp_filename = Date.now().toString();
     const hashedFileName = crypto
@@ -36,18 +50,20 @@ export class MinioClientService {
     );
 
     const filename = hashedFileName + ext;
-    const fileName: string = `${filename}`;
     const fileBuffer = file.buffer;
-    this.client.putObject(baseBucket, fileName, fileBuffer);
+    this.minio.client.putObject(baseBucket, filename, fileBuffer);
 
     return {
-      url: `${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}/${this.configService.get('MINIO_BUCKET')}/${filename}`,
+      url: `${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}/${baseBucket}/${filename}`,
     };
   }
 
   async delete(objetName: string, baseBucket: string) {
     try {
-      const result = await this.client.removeObject(baseBucket, objetName);
+      const result = await this.minio.client.removeObject(
+        baseBucket,
+        objetName,
+      );
       return result;
     } catch (error) {
       throw new HttpException(error?.message, error.status);

@@ -1,8 +1,7 @@
 export interface BufferedFile {
   fieldname: string;
   originalname: string;
-  encoding: string;
-  mimetype: AppMimeType;
+  mimetype: string;
   size: number;
   buffer: Buffer | string;
 }
