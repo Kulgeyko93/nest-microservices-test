@@ -21,13 +21,11 @@ export class TcpAuthMiddleware implements NestMiddleware {
 
   async use(req: Request, res: ResponseWithUser, next: NextFunction) {
     try {
-      console.log('Request...');
       const user = await lastValueFrom(
         this.authClient.send(AccountMessageNames.Authenticate, {
           Authorization: req.headers?.authentication,
         }),
       );
-
       res.user = user;
     } catch (error) {
       throw new NotFoundException('Wrong credentials');
