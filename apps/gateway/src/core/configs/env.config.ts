@@ -10,6 +10,8 @@ export const envSchema = z.object({
 
   ACCOUNT_HOST: z.string(),
   ACCOUNT_PORT: z.string(),
+
+  NOTIFICATION_BROKER: z.string(),
 });
 
 export const gatewayEnvConfig = (): ConfigModuleOptions => ({

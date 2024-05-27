@@ -12,4 +12,5 @@ async function bootstrap() {
     console.log(`Gateway service is run on port = ${port}`),
   );
 }
+
 bootstrap();
