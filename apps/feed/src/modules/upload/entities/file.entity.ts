@@ -12,7 +12,7 @@ import { UserEntity } from '@apps/account/src/user/entities/user.model';
 
 @Entity('file')
 export class FileEntity implements FileEntityContract {
-  @Column()
+  @Column({ name: 'file_url' })
   fileUrl: string;
 
   @Column()

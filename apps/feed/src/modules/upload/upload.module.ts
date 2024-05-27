@@ -4,6 +4,7 @@ import { FileEntity } from './entities/file.entity';
 import { DatabaseModule } from '@lib/common';
 import { MinioStorageModule } from '../minio/minio.module';
 import { UploadService } from './upload.service';
+import { UploadRepository } from './upload.repository';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { UploadService } from './upload.service';
     MinioStorageModule,
   ],
   controllers: [UploadController],
-  providers: [UploadService],
+  providers: [UploadService, UploadRepository],
 })
 export class UploadModule {}
