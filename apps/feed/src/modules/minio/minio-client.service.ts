@@ -51,10 +51,12 @@ export class MinioClientService {
 
     const filename = hashedFileName + ext;
     const fileBuffer = file.buffer;
-    this.minio.client.putObject(baseBucket, filename, fileBuffer);
+    this.minio.client.putObject(baseBucket, filename, fileBuffer, file.size, {
+      'Content-type': 'image',
+    });
 
     return {
-      url: `${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}/${baseBucket}/${filename}`,
+      url: `http://${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}/${baseBucket}/${filename}`,
     };
   }
 
