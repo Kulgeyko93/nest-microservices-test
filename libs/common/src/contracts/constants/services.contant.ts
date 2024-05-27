@@ -9,3 +9,11 @@ export enum MicroservicesNames {
 export enum AccountMessageNames {
   Authenticate = 'authenticate',
 }
+
+export enum KafkaMicroserviceNames {
+  NotificationMS = 'notification-microservice',
+}
+
+export enum KafkaConsumerGroups {
+  NotificationConsumer = 'notification-consumer',
+}
