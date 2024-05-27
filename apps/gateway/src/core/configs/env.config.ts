@@ -20,4 +20,4 @@ export const gatewayEnvConfig = (): ConfigModuleOptions => ({
   envFilePath: path.join(process.cwd(), 'envs', '.gateway.env'),
 });
 
-export type AccountEnv = z.infer<typeof envSchema>;
+export type GatewayEnv = z.infer<typeof envSchema>;
