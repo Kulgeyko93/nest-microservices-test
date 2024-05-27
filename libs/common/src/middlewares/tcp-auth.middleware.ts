@@ -4,6 +4,7 @@ import {
   ResponseWithUser,
 } from '@lib/common';
 import {
+  BadRequestException,
   Inject,
   Injectable,
   NestMiddleware,
@@ -21,12 +22,17 @@ export class TcpAuthMiddleware implements NestMiddleware {
 
   async use(req: Request, res: ResponseWithUser, next: NextFunction) {
     try {
+      const authElements = req.headers?.authorization?.split(' ');
+
+      if (!req.headers?.authorization || !authElements?.length) {
+        throw new BadRequestException();
+      }
       const user = await lastValueFrom(
         this.authClient.send(AccountMessageNames.Authenticate, {
-          Authorization: req.headers?.authentication,
+          Authorization: authElements[1],
         }),
       );
-      res.user = user;
+      req.user = user;
     } catch (error) {
       throw new NotFoundException('Wrong credentials');
     }

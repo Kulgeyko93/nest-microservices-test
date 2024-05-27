@@ -8,6 +8,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { UploadService } from './upload.service';
+import { CurrentUser, IUserEntityContract } from '@lib/common';
 
 @Controller('upload')
 export class UploadController {
@@ -15,16 +16,23 @@ export class UploadController {
 
   @Post('avatar')
   @UseInterceptors(FileInterceptor('avatar'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: IUserEntityContract,
+  ) {
     try {
-      const result = await this.uploadService.uploadAvatar({
+      const avatarPayload = {
         fieldname: file.fieldname,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
         buffer: file.buffer,
-      });
+      };
 
+      const result = await this.uploadService.uploadAvatar(
+        user.id,
+        avatarPayload,
+      );
       return result;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
