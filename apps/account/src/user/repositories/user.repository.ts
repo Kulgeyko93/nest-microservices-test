@@ -9,7 +9,7 @@ export class UserRepository extends AbstractRepository<UserEntity> {
 
   constructor(
     @InjectRepository(UserEntity)
-    protected userRepository: Repository<UserEntity>,
+    protected repository: Repository<UserEntity>,
   ) {
     super();
   }

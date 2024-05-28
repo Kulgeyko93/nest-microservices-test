@@ -21,22 +21,22 @@ export abstract class AbstractRepository<T extends ObjectLiteral> {
   }
 
   findOne(
-    where: FindOptionsWhere<T>,
+    fields: FindOptionsWhere<T>,
     relations?: FindOptionsRelations<T>,
   ): Promise<T | null> {
     return this.repository.findOne({
-      where,
-      relations,
+      where: fields,
+      relations: relations,
     });
   }
 
   find(
-    where: FindOptionsWhere<T>,
+    fields: FindOptionsWhere<T>,
     relations?: FindOptionsRelations<T>,
   ): Promise<T[]> {
     return this.repository.find({
-      where,
-      relations,
+      where: fields,
+      relations: relations,
     });
   }
 

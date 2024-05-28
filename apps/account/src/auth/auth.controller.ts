@@ -3,7 +3,6 @@ import { Controller, NotFoundException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AccountMessageNames } from '@lib/common';
-import { NotFoundError } from 'rxjs';
 
 @Controller('auth')
 export class AuthController {
