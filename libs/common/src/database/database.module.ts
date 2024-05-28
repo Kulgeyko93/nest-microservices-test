@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { FileEntity } from '../../../../apps/feed/src/modules/upload/entities/file.entity';
-import { UserEntity } from '../../../../apps/account/src/user/entities/user.model';
+import { FileEntity } from './entities/file.entity';
+import { PostEntity } from './entities/post.entity';
+import { UserEntity } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserEntity } from '../../../../apps/account/src/user/entities/user.mode
         autoLoadEntities: true,
         logging: configService.get<boolean>('POSTGRES_LOGGING'),
         synchronize: configService.get<boolean>('POSTGRES_SYNCHRONIZE'),
-        entities: [FileEntity, UserEntity],
+        entities: [FileEntity, UserEntity, PostEntity],
       }),
       inject: [ConfigService],
     }),
