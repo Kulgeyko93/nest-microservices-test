@@ -14,7 +14,9 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          brokers: [brokerHost],
+          clientId: 'myapp',
+          brokers: ['192.168.100.4:9092'],
+          // brokers: [brokerHost],
         },
       },
     });

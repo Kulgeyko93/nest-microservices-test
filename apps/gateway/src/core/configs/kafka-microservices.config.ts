@@ -12,7 +12,8 @@ export const getRegisteredMicroservices = (): ClientsModuleAsyncOptions => {
         options: {
           client: {
             clientId: 'payment',
-            brokers: [configService.getOrThrow('NOTIFICATION_BROKER')],
+            brokers: ['localhost:9092'],
+            // brokers: [configService.getOrThrow('NOTIFICATION_BROKER')],
           },
           consumer: {
             groupId: KafkaConsumerGroups.NotificationConsumer,
