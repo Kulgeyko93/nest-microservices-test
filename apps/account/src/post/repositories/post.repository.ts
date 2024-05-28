@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostEntity } from '@lib/common';
+import { AbstractRepository, PostEntity } from '@lib/common';
 
 @Injectable()
-export class PostRepository {
+export class PostRepository extends AbstractRepository<PostEntity> {
+  protected logger: Logger;
+
   constructor(
     @InjectRepository(PostEntity)
-    private readonly postRepository: Repository<PostEntity>,
-  ) {}
+    protected repository: Repository<PostEntity>,
+  ) {
+    super();
+  }
 }
