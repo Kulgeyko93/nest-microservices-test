@@ -8,7 +8,7 @@ export class UserResolver {
 
   @Query(() => [UserEntity], { name: 'users' })
   findAll() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({});
   }
 
   @Query(() => UserEntity, { name: 'user' })
