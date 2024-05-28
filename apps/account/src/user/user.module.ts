@@ -1,6 +1,6 @@
 import { DatabaseModule } from '@lib/common';
 import { Module } from '@nestjs/common';
-import { UserEntity } from './entities/user.model';
+import { UserEntity } from '@lib/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
