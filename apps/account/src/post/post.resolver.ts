@@ -1,8 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { PostRepository } from './repositories/post.repository';
 import { CurrentGqlUser, IUserEntityContract, PostEntity } from '@lib/common';
-import { BadRequestException, UseGuards } from '@nestjs/common';
-import { GqlAuthAccessTokenGuard } from '../auth/guards/gql-auth-access-token.guard';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver(() => PostEntity)
 export class PostResolver {
