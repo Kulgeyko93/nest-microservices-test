@@ -1,5 +1,9 @@
 import { ClientsModuleAsyncOptions, Transport } from '@nestjs/microservices';
-import { KafkaConsumerGroups, KafkaMicroserviceNames } from '@lib/common';
+import {
+  KafkaClients,
+  KafkaConsumerGroups,
+  KafkaMicroserviceNames,
+} from '@lib/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export const getRegisteredMicroservices = (): ClientsModuleAsyncOptions => {
@@ -11,11 +15,28 @@ export const getRegisteredMicroservices = (): ClientsModuleAsyncOptions => {
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'notification',
-            brokers: [configService.getOrThrow('NOTIFICATION_BROKER')],
+            clientId: KafkaClients.NotificationClient,
+            brokers: [configService.getOrThrow('KAFKA_BROKER')],
           },
           consumer: {
             groupId: KafkaConsumerGroups.NotificationConsumer,
+          },
+        },
+      }),
+      inject: [ConfigService],
+    },
+    {
+      name: KafkaMicroserviceNames.AccountMS,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: KafkaClients.AccountClient,
+            brokers: [configService.getOrThrow('KAFKA_BROKER')],
+          },
+          consumer: {
+            groupId: KafkaConsumerGroups.AccountConsumer,
           },
         },
       }),

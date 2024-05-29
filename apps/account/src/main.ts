@@ -3,6 +3,7 @@ import { AccountModule } from './account.module';
 import { ConfigService } from '@nestjs/config';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { KafkaClients, KafkaConsumerGroups } from '@lib/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AccountModule);
@@ -17,8 +18,11 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        clientId: 'account-client',
+        clientId: KafkaClients.AccountClient,
         brokers: [broker],
+      },
+      consumer: {
+        groupId: KafkaConsumerGroups.AccountConsumer,
       },
     },
   });

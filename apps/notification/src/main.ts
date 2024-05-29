@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NotificationModule } from './notification.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { KafkaClients } from '@lib/common';
 
 async function bootstrap() {
   try {
@@ -14,7 +15,7 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          clientId: 'notification-client',
+          clientId: KafkaClients.NotificationClient,
           brokers: [brokerHost],
         },
       },
