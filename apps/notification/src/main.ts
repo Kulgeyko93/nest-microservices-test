@@ -8,15 +8,14 @@ async function bootstrap() {
     const app = await NestFactory.create(NotificationModule);
     const configService = app.get(ConfigService);
 
-    const brokerHost = configService.getOrThrow('NOTIFICATION_BROKER');
+    const brokerHost = configService.getOrThrow('KAFKA_BROKER');
 
     app.connectMicroservice<MicroserviceOptions>({
       transport: Transport.KAFKA,
       options: {
         client: {
-          clientId: 'myapp',
-          brokers: ['192.168.100.4:9092'],
-          // brokers: [brokerHost],
+          clientId: 'notification-client',
+          brokers: [brokerHost],
         },
       },
     });
