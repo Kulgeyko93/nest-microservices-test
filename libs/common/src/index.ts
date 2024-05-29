@@ -6,3 +6,4 @@ export * from './database';
 export * from './decorators';
 export * from './interfaces';
 export * from './middlewares';
+export * from './kafka';
