@@ -3,7 +3,7 @@ import { z } from 'zod';
 import * as path from 'node:path';
 
 export const envSchema = z.object({
-  NOTIFICATION_BROKER: z.string(),
+  KAFKA_BROKER: z.string(),
 });
 
 export const NotificationEnvConfig = (): ConfigModuleOptions => ({
