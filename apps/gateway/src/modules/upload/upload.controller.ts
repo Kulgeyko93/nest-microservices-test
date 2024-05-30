@@ -13,36 +13,50 @@ import {
   // CurrentUser,
   // IUserEntityContract,
   KafkaMicroserviceNames,
+  SagaStep,
 } from '@lib/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { PublishPostSaga, PublishPostStatus } from './sagas/publish-post.saga';
+import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
 
 @Controller('upload')
 export class UploadController {
+  private steps: SagaStep<any, any>[] = [];
+  private successfulSteps: SagaStep<any, any>[] = [];
+
   constructor(
     @Inject(KafkaMicroserviceNames.AccountMS)
     private readonly accountClient: ClientKafka,
 
+    private readonly step1: UploadPostFiles,
+
     private readonly httpService: HttpService,
-  ) {}
+  ) {
+    this.steps = [step1];
+  }
 
   @Post('publish-post')
-  @UseInterceptors(FileInterceptor('files'))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UploadedFile() files: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @Body() dto: any,
     // @CurrentUser() user: IUserEntityContract,
   ) {
     try {
-      // FeedUploadFiles
-
-      const publishPostSaga = new PublishPostSaga(
-        files,
-        this.accountClient,
-        this.httpService,
-      );
-
-      await publishPostSaga.setState(PublishPostStatus.PublishPost);
+      for (const step of this.steps) {
+        try {
+          console.info(`Invoking: ${step.name} ...`);
+          await step.invoke(file);
+          this.successfulSteps.unshift(step);
+        } catch (error) {
+          console.error(`Failed Step: ${step.name} !!`);
+          this.successfulSteps.forEach(async (s) => {
+            console.info(`Rollbacking: ${s.name} ...`);
+            await s.withCompensation(file);
+          });
+          throw error;
+        }
+      }
+      console.info('Order Creation Transaction ended successfuly');
 
       console.log('object');
     } catch (error) {

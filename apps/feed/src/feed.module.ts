@@ -17,6 +17,6 @@ import { UploadModule } from './modules/upload/upload.module';
 })
 export class FeedModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(TcpAuthMiddleware).forRoutes('*');
+    // consumer.apply(TcpAuthMiddleware).forRoutes('*');
   }
 }
