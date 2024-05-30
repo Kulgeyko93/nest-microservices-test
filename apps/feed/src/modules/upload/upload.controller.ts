@@ -38,4 +38,29 @@ export class UploadController {
       throw new HttpException(error?.message, error?.status);
     }
   }
+
+  @Post('post')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadPost(
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: IUserEntityContract,
+  ) {
+    try {
+      // const avatarPayload = {
+      //   fieldname: file.fieldname,
+      //   originalname: file.originalname,
+      //   mimetype: file.mimetype,
+      //   size: file.size,
+      //   buffer: file.buffer,
+      // };
+
+      // const result = await this.uploadService.uploadAvatar(
+      //   user.id,
+      //   avatarPayload,
+      // );
+      return result;
+    } catch (error) {
+      throw new HttpException(error?.message, error?.status);
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { apolloGatewayDriverConfig } from './core/configs/apollo-gateway-driver.config';
 import { ClientsModule } from '@nestjs/microservices';
 import { getRegisteredMicroservices } from './core/configs/kafka-microservices.config';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { getRegisteredMicroservices } from './core/configs/kafka-microservices.c
       apolloGatewayDriverConfig(),
     ),
     ClientsModule.registerAsync(getRegisteredMicroservices()),
+    UploadModule,
   ],
   controllers: [],
   providers: [],
