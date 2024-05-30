@@ -29,7 +29,13 @@ export const apolloGatewayDriverConfig = (): ApolloGatewayDriverConfig => {
           willSendRequest({ request, context }) {
             request.http?.headers.set(
               'user',
-              context.user ? JSON.stringify(context.user) : '',
+              context?.user ? JSON.stringify(context.user) : '',
+            );
+            request.http?.headers.set(
+              'authorization',
+              context?.headers?.authorization
+                ? context?.headers?.authorization
+                : '',
             );
           },
         });

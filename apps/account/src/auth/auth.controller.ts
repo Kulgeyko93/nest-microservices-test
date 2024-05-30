@@ -1,12 +1,7 @@
 import { UserService } from './../user/user.service';
 import { Controller, NotFoundException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  Ctx,
-  KafkaContext,
-  MessagePattern,
-  Payload,
-} from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AccountValidateUser } from '@lib/common';
 
 @Controller('auth')
@@ -19,7 +14,7 @@ export class AuthController {
   @MessagePattern(AccountValidateUser.topic)
   async authenticate(
     @Payload() data: AccountValidateUser.Request,
-    @Ctx() context: KafkaContext,
+    // @Ctx() context: KafkaContext,
   ) {
     try {
       const payload = await this.authService.verifyAccessToken(data.token);
@@ -32,7 +27,7 @@ export class AuthController {
 
       return user;
     } catch (error) {
-      return null;
+      throw new NotFoundException();
     }
   }
 }
