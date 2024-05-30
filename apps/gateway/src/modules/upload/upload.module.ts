@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UploadController } from './upload.controller';
 import { HttpModule } from '@nestjs/axios';
+import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
 
 @Module({
   imports: [
@@ -10,5 +11,6 @@ import { HttpModule } from '@nestjs/axios';
     }),
   ],
   controllers: [UploadController],
+  providers: [UploadPostFiles],
 })
 export class UploadModule {}

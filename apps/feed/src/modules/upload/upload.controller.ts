@@ -43,9 +43,10 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
     @UploadedFile() file: Express.Multer.File,
-    @CurrentUser() user: IUserEntityContract,
+    // @CurrentUser() user: IUserEntityContract,
   ) {
     try {
+      console.log(file.filename);
       // const avatarPayload = {
       //   fieldname: file.fieldname,
       //   originalname: file.originalname,
