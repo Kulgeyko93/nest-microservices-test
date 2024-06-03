@@ -9,14 +9,17 @@ export enum MicroservicesNames {
 export enum KafkaMicroserviceNames {
   NotificationMS = 'notification-microservice',
   AccountMS = 'account-microservice',
+  FeedMS = 'feed-microservice',
 }
 
 export enum KafkaConsumerGroups {
   NotificationConsumer = 'notification-consumer',
   AccountConsumer = 'account-consumer',
+  FeedConsumer = 'feed-consumer',
 }
 
 export enum KafkaClients {
   NotificationClient = 'notification-client',
   AccountClient = 'account-client',
+  FeedClient = 'feed-client',
 }

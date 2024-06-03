@@ -1,4 +1,3 @@
-import { TcpAuthMiddleware } from '@lib/common';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';

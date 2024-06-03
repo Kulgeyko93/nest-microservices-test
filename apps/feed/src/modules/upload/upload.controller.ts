@@ -59,7 +59,7 @@ export class UploadController {
       //   user.id,
       //   avatarPayload,
       // );
-      return result;
+      return file.filename;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }

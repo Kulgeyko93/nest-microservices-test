@@ -1,4 +1,17 @@
 version: "3.7"
+x-common-environment: &common-env
+  - POSTGRES_HOST=postgres
+  - POSTGRES_PORT=5432
+  - POSTGRES_USER=user
+  - POSTGRES_PASSWORD=password
+  - POSTGRES_DB=account
+  - POSTGRES_LOGGING=true
+  - POSTGRES_SYNCHRONIZE=true
+  - REDIS_HOST=redis
+  - REDIS_PORT=6379
+  - REDIS_PASSWORD=password
+  - REDIS_TTL=5000
+
 services:
   redis:
     image: redis:7.0-alpine
@@ -50,94 +63,6 @@ services:
     networks:
       - backend
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: "zookeeper"
-    ports:
-    - 2181:2181
-    volumes:
-    - ./volumes/zookeeper:/var/lib/zookeeper
-    networks:
-    - "backend"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: "kafka"
-    restart: unless-stopped
-    ports:
-        - '9092:9092'
-    networks:
-      - "backend"
-    volumes:
-      - ./volumes/kafka:/opt/bitnami/kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-
-  # account:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/account/Dockerfile
-  #   restart: always
-  #   command: yarn dev-account
-  #   container_name: account_container
-  #   environment:
-  #     - POSTGRES_HOST=postgres
-  #     - POSTGRES_PORT=5432
-  #     - POSTGRES_USER=user
-  #     - POSTGRES_PASSWORD=password
-  #     - POSTGRES_DB=account
-  #     - POSTGRES_LOGGING=true
-  #     - POSTGRES_SYNCHRONIZE=true
-  #     - REDIS_HOST=redis
-  #     - REDIS_PORT=6379
-  #     - REDIS_PASSWORD=password
-  #     - REDIS_TTL=5000
-  #   ports:
-  #     - '3030:3030'
-  #     - '4030:4030'
-  #   volumes:
-  #     - .:/opt/src/app
-  #   depends_on:
-  #     - postgres
-  #     - redis
-  #   networks:
-  #     - backend
-  # gateway:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/gateway/Dockerfile
-  #   restart: always
-  #   command: yarn dev-gateway
-  #   container_name: gateway_container
-  #   environment:
-  #     - PORT=3004
-  #     - TCP_PORT=4004
-  #     - ACCOUNT_GRAPHQL_URL=http://account:3030/graphql
-  #     - ACCOUNT_HOST=account
-  #     - ACCOUNT_PORT=4030
-  #   ports:
-  #     - '3004:3004'
-  #     - '4004:4004'
-  #   volumes:
-  #     - .:/opt/src/app
-  #   depends_on:
-  #     - postgres
-  #     - account
-  #   networks:
-  #     - backend
-
   minio:
     image: minio/minio:latest
     container_name: minio-storage
@@ -156,6 +81,125 @@ services:
       timeout: 20s
       retries: 3
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./volumes/zookeeper:/var/lib/zookeeper
+    networks:
+      - "backend"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: "kafka"
+    restart: unless-stopped
+    ports:
+      - '9092:9092'
+    networks:
+      - "backend"
+    volumes:
+      - ./volumes/kafka:/opt/bitnami/kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:7.3.0
+    hostname: control-center
+    restart: unless-stopped
+    container_name: control-center
+    depends_on:
+      - kafka
+    ports:
+      - "9021:9021"
+    networks:
+      - "backend"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+
+  # account:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/account/Dockerfile
+  #   restart: always
+  #   command: yarn dev-account
+  #   container_name: account_container
+  #   environment:
+  #     &common-env
+  #     - HTTP_PORT=3030
+  #     - KAFKA_BROKER=kafka:9092
+
+  #     - JWT_ACCESS_SECRET=asdfasffqw12
+  #     - JWT_ACCESS_EXPIRES='1d'
+  #     - JWT_REFRESH_SECRET=sdva121fafaw
+  #     - JWT_REFRESH_EXPIRES='30d'
+  #   ports:
+  #     - '3031:3030'
+  #     - '4030:4030'
+  #   volumes:
+  #     - .:/opt/src/app
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #     - redis
+  #   networks:
+  #     - backend
+
+  # gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/gateway/Dockerfile
+  #   restart: always
+  #   command: yarn dev-gateway
+  #   container_name: gateway_container
+  #   environment:
+  #     - PORT=3004
+  #     - KAFKA_BROKER=kafka:9092
+  #     - X_API_KEY=47733ca1-3694-410c-8656-0f6178d60dd9
+
+  #     - JWT_ACCESS_SECRET=asdfasffqw12
+  #     - JWT_ACCESS_EXPIRES='1d'
+
+  #     - ACCOUNT_GRAPHQL_URL=http://account:3030
+  #     - ACCOUNT_HOST=account
+  #     - ACCOUNT_PORT=4030
+
+  #   ports:
+  #     - '3005:3004'
+  #   volumes:
+  #     - .:/opt/src/app
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #     - account
+  #   networks:
+  #     - backend
+
+
+
 volumes:
   postgres_data:
   pgadmin-data:
@@ -163,12 +207,12 @@ volumes:
 networks:
   backend:
     driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.5.0.0/16
-          ip_range: 10.5.0.0/24
-          gateway: 10.5.0.1
-          aux_addresses:
-            kafka: 10.5.0.2
-            zookeeper: 10.5.0.3
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 10.5.0.0/16
+    #       ip_range: 10.5.0.0/24
+    #       gateway: 10.5.0.1
+    #       aux_addresses:
+    #         kafka: 10.5.0.2
+    #         zookeeper: 10.5.0.3

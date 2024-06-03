@@ -7,43 +7,58 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export const getRegisteredMicroservices = (): ClientsModuleAsyncOptions => {
-  return {
-    isGlobal: true,
-    clients: [
-      {
-        name: KafkaMicroserviceNames.NotificationMS,
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.KAFKA,
-          options: {
-            client: {
-              clientId: KafkaClients.NotificationClient,
-              brokers: [configService.getOrThrow('KAFKA_BROKER')],
-            },
-            consumer: {
-              groupId: KafkaConsumerGroups.NotificationConsumer,
-            },
+  return [
+    {
+      name: KafkaMicroserviceNames.AccountMS,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: KafkaClients.AccountClient,
+            brokers: [configService.getOrThrow('KAFKA_BROKER')],
           },
-        }),
-        inject: [ConfigService],
-      },
-      {
-        name: KafkaMicroserviceNames.AccountMS,
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.KAFKA,
-          options: {
-            client: {
-              clientId: KafkaClients.AccountClient,
-              brokers: [configService.getOrThrow('KAFKA_BROKER')],
-            },
-            consumer: {
-              groupId: KafkaConsumerGroups.AccountConsumer,
-            },
+          consumer: {
+            groupId: KafkaConsumerGroups.AccountConsumer,
           },
-        }),
-        inject: [ConfigService],
-      },
-    ],
-  };
+        },
+      }),
+      inject: [ConfigService],
+    },
+    // {
+    //   name: KafkaMicroserviceNames.NotificationMS,
+    //   imports: [ConfigModule],
+    //   useFactory: (configService: ConfigService) => ({
+    //     transport: Transport.KAFKA,
+    //     options: {
+    //       client: {
+    //         clientId: KafkaClients.NotificationClient,
+    //         brokers: [configService.getOrThrow('KAFKA_BROKER')],
+    //       },
+    //       consumer: {
+    //         groupId: KafkaConsumerGroups.NotificationConsumer,
+    //       },
+    //     },
+    //   }),
+    //   inject: [ConfigService],
+    // },
+
+    // {
+    //   name: KafkaMicroserviceNames.FeedMS,
+    //   imports: [ConfigModule],
+    //   useFactory: (configService: ConfigService) => ({
+    //     transport: Transport.KAFKA,
+    //     options: {
+    //       client: {
+    //         clientId: KafkaClients.FeedClient,
+    //         brokers: [configService.getOrThrow('KAFKA_BROKER')],
+    //       },
+    //       consumer: {
+    //         groupId: KafkaConsumerGroups.FeedConsumer,
+    //       },
+    //     },
+    //   }),
+    //   inject: [ConfigService],
+    // },
+  ];
 };
