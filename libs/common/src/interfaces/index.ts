@@ -1,2 +1,2 @@
 export * from './common.interfaces';
-export * from './saga';
+export * from './saga.interface';

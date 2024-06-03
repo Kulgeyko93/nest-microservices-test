@@ -7,3 +7,9 @@ export type NoUndefinedField<T> = {
 export interface ResponseWithUser extends Request {
   user: IUserEntityContract;
 }
+
+export interface ICreatePostStep {
+  userId: string;
+  content: string;
+  fileIds: string[];
+}

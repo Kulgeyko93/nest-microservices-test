@@ -17,6 +17,7 @@ import {
 } from '@lib/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
+import { CreatePostStep } from './sagas/publish-post/create-post.step';
 
 @Controller('upload')
 export class UploadController {
@@ -27,11 +28,12 @@ export class UploadController {
     @Inject(KafkaMicroserviceNames.AccountMS)
     private readonly accountClient: ClientKafka,
 
-    private readonly step1: UploadPostFiles,
+    private readonly uploadPostFile: UploadPostFiles,
+    private readonly createPostStep: CreatePostStep,
 
     private readonly httpService: HttpService,
   ) {
-    this.steps = [step1];
+    this.steps = [uploadPostFile];
   }
 
   @Post('publish-post')
@@ -42,20 +44,25 @@ export class UploadController {
     // @CurrentUser() user: IUserEntityContract,
   ) {
     try {
-      for (const step of this.steps) {
-        try {
-          console.info(`Invoking: ${step.name} ...`);
-          await step.invoke(file);
-          this.successfulSteps.unshift(step);
-        } catch (error) {
-          console.error(`Failed Step: ${step.name} !!`);
-          this.successfulSteps.forEach(async (s) => {
-            console.info(`Rollbacking: ${s.name} ...`);
-            await s.withCompensation(file);
-          });
-          throw error;
-        }
-      }
+      const result = await this.createPostStep.invoke({
+        userId: '13fc94c5-c84f-402f-8580-a27b0c2c6f0f',
+        content: 'asdsadasdasdasd',
+      });
+
+      // for (const step of this.steps) {
+      //   try {
+      //     console.info(`Invoking: ${step.name} ...`);
+      //     const result = await step.invoke(file);
+      //     this.successfulSteps.unshift(step);
+      //   } catch (error) {
+      //     console.error(`Failed Step: ${step.name} !!`);
+      //     this.successfulSteps.forEach(async (s) => {
+      //       console.info(`Rollbacking: ${s.name} ...`);
+      //       await s.withCompensation(file);
+      //     });
+      //     throw error;
+      //   }
+      // }
       console.info('Order Creation Transaction ended successfuly');
 
       console.log('object');

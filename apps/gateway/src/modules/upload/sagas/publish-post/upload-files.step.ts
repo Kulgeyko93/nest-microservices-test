@@ -1,21 +1,16 @@
 import { lastValueFrom } from 'rxjs';
-import { KafkaMicroserviceNames, SagaStep } from '@lib/common';
+import { SagaStep } from '@lib/common';
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 import FormData from 'form-data';
 
 @Injectable()
 export class UploadPostFiles extends SagaStep<Express.Multer.File, any> {
-  constructor(
-    // @Inject(KafkaMicroserviceNames.AccountMS)
-    // private accountClient: ClientKafka,
-    private readonly httpService: HttpService,
-  ) {
+  constructor(private readonly httpService: HttpService) {
     super();
   }
 
-  async invoke(file: Express.Multer.File): Promise<void> {
+  async invoke(file: Express.Multer.File): Promise<any> {
     const formData = new FormData();
     formData.append('file', file.buffer, { filename: file.originalname });
     const headers = {
@@ -30,6 +25,7 @@ export class UploadPostFiles extends SagaStep<Express.Multer.File, any> {
     );
 
     console.log(result);
+    return result;
   }
   withCompensation(params: Express.Multer.File): Promise<string[]> {
     throw new Error('Method not implemented.');
