@@ -1,4 +1,11 @@
 import {
+  CurrentUser,
+  FileTypes,
+  IUserEntityContract,
+  MinioBuckets,
+} from '@lib/common';
+import {
+  Body,
   Controller,
   HttpException,
   Post,
@@ -8,7 +15,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { UploadService } from './upload.service';
-import { CurrentUser, IUserEntityContract } from '@lib/common';
 
 @Controller('upload')
 export class UploadController {
@@ -21,7 +27,7 @@ export class UploadController {
     @CurrentUser() user: IUserEntityContract,
   ) {
     try {
-      const avatarPayload = {
+      const filePayload = {
         fieldname: file.fieldname,
         originalname: file.originalname,
         mimetype: file.mimetype,
@@ -29,10 +35,12 @@ export class UploadController {
         buffer: file.buffer,
       };
 
-      const result = await this.uploadService.uploadAvatar(
-        user.id,
-        avatarPayload,
-      );
+      const result = await this.uploadService.uploadFile({
+        userId: user.id,
+        file: filePayload,
+        fileType: FileTypes.avatar,
+        baseBucket: MinioBuckets.Avatar,
+      });
       return result;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
@@ -43,22 +51,24 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
     @UploadedFile() file: Express.Multer.File,
-    // @CurrentUser() user: IUserEntityContract,
+    @Body() dto: Record<'userId', string>,
   ) {
     try {
       console.log(file.filename);
-      // const avatarPayload = {
-      //   fieldname: file.fieldname,
-      //   originalname: file.originalname,
-      //   mimetype: file.mimetype,
-      //   size: file.size,
-      //   buffer: file.buffer,
-      // };
+      const filePayload = {
+        fieldname: file.fieldname,
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        buffer: file.buffer,
+      };
 
-      // const result = await this.uploadService.uploadAvatar(
-      //   user.id,
-      //   avatarPayload,
-      // );
+      const result = await this.uploadService.uploadFile({
+        userId: dto.userId,
+        file: filePayload,
+        fileType: FileTypes.post,
+        baseBucket: MinioBuckets.Post,
+      });
       return file.filename;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);

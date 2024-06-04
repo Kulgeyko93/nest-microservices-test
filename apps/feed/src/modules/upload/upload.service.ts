@@ -1,8 +1,7 @@
 import { UploadRepository } from './upload.repository';
 import { Injectable, Logger } from '@nestjs/common';
-import { BufferedFile } from '../minio/helpers/interfaces';
 import { MinioClientService } from '../minio/minio-client.service';
-import { MinioBuckets } from '../minio/helpers/constants';
+import { StoreFilePayload, UploadFilePayload } from '@lib/common';
 
 @Injectable()
 export class UploadService {
@@ -15,18 +14,32 @@ export class UploadService {
     this.logger = new Logger('UploadService');
   }
 
-  async uploadAvatar(userId: string, image: BufferedFile) {
+  async storeFile({ file, ...data }: StoreFilePayload) {
+    const filePayload = {
+      fieldname: file.fieldname,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size,
+      buffer: file.buffer,
+    };
+    const result = await this.uploadFile({
+      file: filePayload,
+      ...data,
+    });
+  }
+
+  async uploadFile({ file, userId, baseBucket, fileType }: UploadFilePayload) {
     const uploaded_image = await this.minioClientService.upload(
-      image,
-      MinioBuckets.Avatar,
+      file,
+      baseBucket,
     );
 
-    const file = await this.uploadRepository.createOrUpdate({
+    const fileEntity = await this.uploadRepository.createOrUpdate({
       fileUrl: uploaded_image.url,
       userId,
-      type: 'avatar', // TODO: fix to common types
+      type: fileType,
     });
 
-    return file;
+    return fileEntity;
   }
 }
