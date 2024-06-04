@@ -28,13 +28,11 @@ export class UploadController {
     @Inject(KafkaMicroserviceNames.AccountMS)
     private readonly accountClient: ClientKafka,
 
-    private readonly uploadPostFile: UploadPostFiles,
+    private readonly uploadPostFileStep: UploadPostFiles,
     private readonly createPostStep: CreatePostStep,
 
     private readonly httpService: HttpService,
-  ) {
-    this.steps = [uploadPostFile];
-  }
+  ) {}
 
   @Post('publish-post')
   @UseInterceptors(FileInterceptor('file'))
@@ -44,10 +42,15 @@ export class UploadController {
     // @CurrentUser() user: IUserEntityContract,
   ) {
     try {
-      const result = await this.createPostStep.invoke({
+      const uploadedFiles = this.uploadPostFileStep.invoke({
+        file,
         userId: '13fc94c5-c84f-402f-8580-a27b0c2c6f0f',
-        content: 'asdsadasdasdasd',
       });
+
+      // const result = await this.createPostStep.invoke({
+      //   userId: '13fc94c5-c84f-402f-8580-a27b0c2c6f0f',
+      //   content: 'asdsadasdasdasd',
+      // });
 
       // for (const step of this.steps) {
       //   try {
