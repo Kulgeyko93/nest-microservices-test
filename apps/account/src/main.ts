@@ -19,8 +19,7 @@ async function bootstrap() {
     options: {
       client: {
         clientId: KafkaClients.AccountClient,
-        brokers: ['localhost:9092'],
-        // brokers: [broker],
+        brokers: [broker],
       },
       consumer: {
         groupId: KafkaConsumerGroups.AccountConsumer,
