@@ -1,4 +1,4 @@
-import { FileEntity, FileTypes, MinioBuckets } from '@lib/common';
+import { FileTypes, MinioBuckets, UploadSinglePostFile } from '@lib/common';
 import {
   Body,
   Controller,
@@ -22,12 +22,14 @@ export class UploadController {
     @Body() { userId }: Record<'userId', string>,
   ) {
     try {
-      return this.uploadService.storeFile({
+      const uploadedFile = await this.uploadService.storeFile({
         file,
         userId,
         baseBucket: MinioBuckets.Avatar,
         fileType: FileTypes.Avatar,
       });
+
+      return { uploadedFile };
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }
@@ -38,14 +40,15 @@ export class UploadController {
   async uploadPost(
     @UploadedFile() file: Express.Multer.File,
     @Body() { userId }: Record<'userId', string>,
-  ): Promise<FileEntity> {
+  ): Promise<UploadSinglePostFile.Response> {
     try {
-      return this.uploadService.storeFile({
+      const uploadedFile = await this.uploadService.storeFile({
         file,
         userId,
         baseBucket: MinioBuckets.Post,
         fileType: FileTypes.Post,
       });
+      return { file: uploadedFile };
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }

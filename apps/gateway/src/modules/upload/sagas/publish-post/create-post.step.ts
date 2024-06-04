@@ -1,4 +1,9 @@
-import { CreatePostUser, KafkaMicroserviceNames, SagaStep } from '@lib/common';
+import {
+  CreatePostUser,
+  FileEntity,
+  KafkaMicroserviceNames,
+  SagaStep,
+} from '@lib/common';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
@@ -6,6 +11,7 @@ import { lastValueFrom } from 'rxjs';
 export interface ICreatePostStep {
   userId: string;
   content: string;
+  file?: FileEntity;
 }
 
 @Injectable()
@@ -25,12 +31,14 @@ export class CreatePostStep
       const post = await lastValueFrom(
         this.accountClient.send(CreatePostUser.topic, data),
       );
-      console.log(post);
+
+      return post;
     } catch (error) {
       console.log(error);
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   withCompensation(params: ICreatePostStep): Promise<string[]> {
     throw new Error('Method not implemented.');
   }

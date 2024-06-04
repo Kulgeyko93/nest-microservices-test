@@ -10,10 +10,12 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  CurrentUser,
   // CurrentUser,
   // IUserEntityContract,
   KafkaMicroserviceNames,
   SagaStep,
+  UserEntity,
 } from '@lib/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
@@ -38,35 +40,26 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() dto: any,
-    // @CurrentUser() user: IUserEntityContract,
+    @Body() { content }: Record<'content', string>,
+    @CurrentUser() { id: userId }: UserEntity,
   ) {
     try {
-      const uploadedFiles = this.uploadPostFileStep.invoke({
+      const uploadedFiles = await this.uploadPostFileStep.invoke({
         file,
-        userId: '13fc94c5-c84f-402f-8580-a27b0c2c6f0f',
+        userId,
       });
 
-      // const result = await this.createPostStep.invoke({
-      //   userId: '13fc94c5-c84f-402f-8580-a27b0c2c6f0f',
-      //   content: 'asdsadasdasdasd',
-      // });
+      this.successfulSteps.push(this.uploadPostFileStep);
 
-      // for (const step of this.steps) {
-      //   try {
-      //     console.info(`Invoking: ${step.name} ...`);
-      //     const result = await step.invoke(file);
-      //     this.successfulSteps.unshift(step);
-      //   } catch (error) {
-      //     console.error(`Failed Step: ${step.name} !!`);
-      //     this.successfulSteps.forEach(async (s) => {
-      //       console.info(`Rollbacking: ${s.name} ...`);
-      //       await s.withCompensation(file);
-      //     });
-      //     throw error;
-      //   }
-      // }
-      console.info('Order Creation Transaction ended successfuly');
+      const createdPost = await this.createPostStep.invoke({
+        userId,
+        content,
+        file: uploadedFiles.file,
+      });
+
+      return createdPost;
+
+      console.info('Order Creation Transaction ended successfully');
 
       console.log('object');
     } catch (error) {
