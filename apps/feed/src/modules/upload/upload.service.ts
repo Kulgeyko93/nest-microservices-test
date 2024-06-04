@@ -26,6 +26,8 @@ export class UploadService {
       file: filePayload,
       ...data,
     });
+
+    return result;
   }
 
   async uploadFile({ file, userId, baseBucket, fileType }: UploadFilePayload) {
@@ -34,7 +36,7 @@ export class UploadService {
       baseBucket,
     );
 
-    const fileEntity = await this.uploadRepository.createOrUpdate({
+    const fileEntity = await this.uploadRepository.create({
       fileUrl: uploaded_image.url,
       userId,
       type: fileType,
