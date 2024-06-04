@@ -1,7 +1,7 @@
-import { lastValueFrom } from 'rxjs';
 import { CreatePostUser, KafkaMicroserviceNames, SagaStep } from '@lib/common';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 export interface ICreatePostStep {
   userId: string;
@@ -38,6 +38,5 @@ export class CreatePostStep
   async onModuleInit() {
     this.accountClient.subscribeToResponseOf(CreatePostUser.topic);
     await this.accountClient.connect();
-    // this.accountClient.connect();
   }
 }
