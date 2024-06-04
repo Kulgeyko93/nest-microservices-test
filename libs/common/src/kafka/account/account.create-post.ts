@@ -1,7 +1,7 @@
 import { UserEntity } from '../../database';
 
 export namespace CreatePostUser {
-  export const topic = 'account.create-post.command';
+  export const topic = 'account.create_post.command';
 
   export class Request {
     userId: string;

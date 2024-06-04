@@ -21,5 +21,6 @@ export enum KafkaConsumerGroups {
 export enum KafkaClients {
   NotificationClient = 'notification-client',
   AccountClient = 'account-client',
+  GatewayClient = 'gateway-client',
   FeedClient = 'feed-client',
 }

@@ -5,8 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { apolloGatewayDriverConfig } from './core/configs/apollo-gateway-driver.config';
 import { ClientsModule } from '@nestjs/microservices';
-import { getRegisteredMicroservices } from './core/configs/kafka-microservices.config';
 import { UploadModule } from './modules/upload/upload.module';
+import { KafkaMicroserviceNames, clientModuleConfigs } from '@lib/common';
 
 @Module({
   imports: [
@@ -14,7 +14,10 @@ import { UploadModule } from './modules/upload/upload.module';
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>(
       apolloGatewayDriverConfig(),
     ),
-    ClientsModule.registerAsync(getRegisteredMicroservices()),
+    ClientsModule.registerAsync({
+      isGlobal: true,
+      clients: [clientModuleConfigs[KafkaMicroserviceNames.AccountMS]],
+    }),
     UploadModule,
   ],
   controllers: [],
