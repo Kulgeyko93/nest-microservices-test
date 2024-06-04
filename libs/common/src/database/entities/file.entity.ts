@@ -8,7 +8,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { FileEntityContract, PostEntity, UserEntity } from '@lib/common';
+import {
+  FileEntityContract,
+  FileTypes,
+  PostEntity,
+  UserEntity,
+} from '@lib/common';
 
 @Entity('file')
 export class FileEntity implements FileEntityContract {
@@ -19,7 +24,7 @@ export class FileEntity implements FileEntityContract {
   fileUrl: string;
 
   @Column()
-  type: string;
+  type: FileTypes;
 
   // relations
 

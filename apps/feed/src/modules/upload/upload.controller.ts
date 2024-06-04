@@ -1,9 +1,4 @@
-import {
-  CurrentUser,
-  FileTypes,
-  IUserEntityContract,
-  MinioBuckets,
-} from '@lib/common';
+import { FileEntity, FileTypes, MinioBuckets } from '@lib/common';
 import {
   Body,
   Controller,
@@ -24,24 +19,15 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @CurrentUser() user: IUserEntityContract,
+    @Body() { userId }: Record<'userId', string>,
   ) {
     try {
-      const filePayload = {
-        fieldname: file.fieldname,
-        originalname: file.originalname,
-        mimetype: file.mimetype,
-        size: file.size,
-        buffer: file.buffer,
-      };
-
-      const result = await this.uploadService.uploadFile({
-        userId: user.id,
-        file: filePayload,
-        fileType: FileTypes.avatar,
+      return this.uploadService.storeFile({
+        file,
+        userId,
         baseBucket: MinioBuckets.Avatar,
+        fileType: FileTypes.Avatar,
       });
-      return result;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }
@@ -51,25 +37,15 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
     @UploadedFile() file: Express.Multer.File,
-    @Body() dto: Record<'userId', string>,
-  ) {
+    @Body() { userId }: Record<'userId', string>,
+  ): Promise<FileEntity> {
     try {
-      console.log(file.filename);
-      const filePayload = {
-        fieldname: file.fieldname,
-        originalname: file.originalname,
-        mimetype: file.mimetype,
-        size: file.size,
-        buffer: file.buffer,
-      };
-
-      const result = await this.uploadService.uploadFile({
-        userId: dto.userId,
-        file: filePayload,
-        fileType: FileTypes.post,
+      return this.uploadService.storeFile({
+        file,
+        userId,
         baseBucket: MinioBuckets.Post,
+        fileType: FileTypes.Post,
       });
-      return file.filename;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }

@@ -4,6 +4,6 @@ export enum MinioBuckets {
 }
 
 export enum FileTypes {
-  'avatar',
-  'post',
+  Avatar = 'avatar',
+  Post = 'post',
 }

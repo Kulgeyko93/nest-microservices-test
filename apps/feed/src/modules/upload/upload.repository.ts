@@ -24,9 +24,6 @@ export class UploadRepository extends AbstractRepository<FileEntity> {
       return await this.create(payload);
     }
 
-    return await this.update(
-      { userId: payload.userId },
-      { fileUrl: payload.fileUrl },
-    );
+    await this.update({ userId: payload.userId }, { fileUrl: payload.fileUrl });
   }
 }
