@@ -18,8 +18,7 @@ export const clientModuleConfigs: Record<
       options: {
         client: {
           clientId: KafkaClients.AccountClient,
-          brokers: ['localhost:9092'],
-          // brokers: [configService.getOrThrow('KAFKA_BROKER')],
+          brokers: [configService.getOrThrow('KAFKA_BROKER')],
         },
         consumer: {
           groupId: KafkaConsumerGroups.AccountConsumer,
