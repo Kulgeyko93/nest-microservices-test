@@ -1,5 +1,9 @@
 import { lastValueFrom } from 'rxjs';
-import { SagaStep, UploadPostFilesStep } from '@lib/common';
+import {
+  SagaStep,
+  UploadPostFilesStep,
+  UploadSinglePostFile,
+} from '@lib/common';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import FormData from 'form-data';
@@ -10,7 +14,10 @@ export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
     super();
   }
 
-  async invoke({ file, userId }: UploadPostFilesStep): Promise<any> {
+  async invoke({
+    file,
+    userId,
+  }: UploadPostFilesStep): Promise<UploadSinglePostFile.Response> {
     const formData = new FormData();
     formData.append('file', file.buffer, { filename: file.originalname });
     const headers = {
@@ -21,13 +28,16 @@ export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
     formData.append('userId', userId);
 
     const result = await lastValueFrom(
-      this.httpService.post('http://localhost:3040/upload/post', formData, {
-        headers,
-      }),
+      this.httpService.post<UploadSinglePostFile.Response>(
+        'http://localhost:3040/upload/post',
+        formData,
+        {
+          headers,
+        },
+      ),
     );
 
-    console.log(result);
-    return result;
+    return result.data;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   withCompensation({ file, userId }: UploadPostFilesStep): Promise<string[]> {
