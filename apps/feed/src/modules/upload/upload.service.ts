@@ -30,7 +30,7 @@ export class UploadService {
     return result;
   }
 
-  async uploadFile({ file, userId, baseBucket, fileType }: UploadFilePayload) {
+  async uploadFile({ file, userId, baseBucket }: UploadFilePayload) {
     const uploaded_image = await this.minioClientService.upload(
       file,
       baseBucket,
@@ -39,7 +39,6 @@ export class UploadService {
     const fileEntity = await this.uploadRepository.create({
       fileUrl: uploaded_image.url,
       userId,
-      type: fileType,
     });
 
     return fileEntity;

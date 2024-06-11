@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
-import { UploadController } from './upload.controller';
+import { AuthMiddleware } from '@lib/common';
 import { HttpModule } from '@nestjs/axios';
-import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CreatePostStep } from './sagas/publish-post/create-post.step';
+import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
+import { UploadController } from './upload.controller';
 
 @Module({
   imports: [
@@ -14,4 +15,8 @@ import { CreatePostStep } from './sagas/publish-post/create-post.step';
   controllers: [UploadController],
   providers: [UploadPostFiles, CreatePostStep],
 })
-export class UploadModule {}
+export class UploadModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AuthMiddleware).forRoutes('*');
+  }
+}

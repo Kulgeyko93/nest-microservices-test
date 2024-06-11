@@ -1,1 +1,1 @@
-export * from './tcp-auth.middleware';
+export * from './auth.middleware';
