@@ -1,5 +1,5 @@
 import { BufferedFile } from '@apps/feed/src/modules/minio/helpers/interfaces';
-import { MinioBuckets, FileTypes } from '../contracts';
+import { MinioBuckets } from '../contracts';
 
 export abstract class SagaStep<T, R> {
   name: string;
@@ -15,7 +15,6 @@ export interface UploadPostFilesStep {
 export interface FilePayload {
   userId: string;
   baseBucket: MinioBuckets;
-  fileType: FileTypes;
 }
 
 export interface StoreFilePayload extends FilePayload {

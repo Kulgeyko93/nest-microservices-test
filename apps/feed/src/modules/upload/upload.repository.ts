@@ -16,7 +16,7 @@ export class UploadRepository extends AbstractRepository<FileEntity> {
   }
 
   async createOrUpdate(
-    payload: Pick<FileEntityContract, 'fileUrl' | 'userId' | 'type'>,
+    payload: Pick<FileEntityContract, 'fileUrl' | 'userId'>,
   ) {
     const file = await this.findOne({ userId: payload.userId });
 

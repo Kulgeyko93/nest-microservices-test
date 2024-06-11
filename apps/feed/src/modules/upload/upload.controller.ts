@@ -1,4 +1,4 @@
-import { FileTypes, MinioBuckets, UploadSinglePostFile } from '@lib/common';
+import { MinioBuckets, UploadSinglePostFile } from '@lib/common';
 import {
   Body,
   Controller,
@@ -26,7 +26,6 @@ export class UploadController {
         file,
         userId,
         baseBucket: MinioBuckets.Avatar,
-        fileType: FileTypes.Avatar,
       });
 
       return { uploadedFile };
@@ -46,7 +45,6 @@ export class UploadController {
         file,
         userId,
         baseBucket: MinioBuckets.Post,
-        fileType: FileTypes.Post,
       });
       return { file: uploadedFile };
     } catch (error) {

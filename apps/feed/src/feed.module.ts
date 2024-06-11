@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { clientModuleConfig } from './core/configs/client-module.config';
@@ -14,8 +14,4 @@ import { UploadModule } from './modules/upload/upload.module';
     UploadModule,
   ],
 })
-export class FeedModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    // consumer.apply(TcpAuthMiddleware).forRoutes('*');
-  }
-}
+export class FeedModule {}
