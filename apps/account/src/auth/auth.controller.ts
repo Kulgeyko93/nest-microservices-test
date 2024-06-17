@@ -1,5 +1,5 @@
 import { UserService } from './../user/user.service';
-import { Controller, NotFoundException } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AccountValidateUser } from '@lib/common';
@@ -25,9 +25,9 @@ export class AuthController {
 
       if (!user) return null;
 
-      return user;
+      return JSON.stringify(user);
     } catch (error) {
-      throw new NotFoundException();
+      return null;
     }
   }
 }

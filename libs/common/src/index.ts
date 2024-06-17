@@ -7,4 +7,3 @@ export * from './database';
 export * from './decorators';
 export * from './interfaces';
 export * from './kafka';
-export * from './middlewares';

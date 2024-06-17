@@ -38,7 +38,7 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
     @UploadedFile() file: Express.Multer.File,
-    @Body() { userId }: Record<'userId', string>,
+    @Body() { userId }: any,
   ): Promise<UploadSinglePostFile.Response> {
     try {
       const uploadedFile = await this.uploadService.storeFile({
