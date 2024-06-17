@@ -12,6 +12,9 @@ export const envSchema = z.object({
   ACCOUNT_PORT: z.string(),
 
   KAFKA_BROKER: z.string(),
+
+  JWT_ACCESS_SECRET: z.string(),
+  JWT_ACCESS_EXPIRES: z.string(),
 });
 
 export const gatewayEnvConfig = (): ConfigModuleOptions => ({

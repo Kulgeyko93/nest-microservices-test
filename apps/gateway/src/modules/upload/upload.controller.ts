@@ -58,10 +58,6 @@ export class UploadController {
       });
 
       return createdPost;
-
-      console.info('Order Creation Transaction ended successfully');
-
-      console.log('object');
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }

@@ -23,8 +23,8 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     AuthService,
     AuthResolver,
     AccessTokenStrategy,
-    RefreshTokenStrategy,
     LocalStrategy,
+    RefreshTokenStrategy,
   ],
 })
 export class AuthModule {}

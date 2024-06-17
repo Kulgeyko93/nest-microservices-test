@@ -19,13 +19,16 @@ export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
     userId,
   }: UploadPostFilesStep): Promise<UploadSinglePostFile.Response> {
     const formData = new FormData();
-    formData.append('file', file.buffer, { filename: file.originalname });
+    formData.append('file', file.buffer, {
+      filename: file.originalname,
+      filepath: file.path,
+    });
+    formData.append('userId', userId);
+
     const headers = {
       ...formData.getHeaders(),
       'Content-Length': formData.getLengthSync(),
     };
-
-    formData.append('userId', userId);
 
     const result = await lastValueFrom(
       this.httpService.post<UploadSinglePostFile.Response>(

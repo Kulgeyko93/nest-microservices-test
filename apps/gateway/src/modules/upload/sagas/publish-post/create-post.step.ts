@@ -1,4 +1,5 @@
 import {
+  AccountValidateUser,
   CreatePostUser,
   FileEntity,
   KafkaMicroserviceNames,
@@ -44,7 +45,13 @@ export class CreatePostStep
   }
 
   async onModuleInit() {
+    //  TODO: investigate to creation all topics in one place
     this.accountClient.subscribeToResponseOf(CreatePostUser.topic);
+    this.accountClient.subscribeToResponseOf(AccountValidateUser.topic);
     await this.accountClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.accountClient.close();
   }
 }

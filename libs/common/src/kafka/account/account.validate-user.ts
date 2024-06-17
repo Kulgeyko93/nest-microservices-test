@@ -6,6 +6,7 @@ export namespace AccountValidateUser {
 
   export class Request {
     token: string;
+    replyTopic: string;
   }
 
   export class Response {
