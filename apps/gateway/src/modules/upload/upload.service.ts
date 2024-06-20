@@ -11,6 +11,7 @@ import { ClientKafka } from '@nestjs/microservices';
 import { UploadSinglePostFile } from '@lib/common';
 import FormData from 'form-data';
 import { lastValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 
 export interface PostInitData {
   userId: string;
@@ -28,6 +29,7 @@ export class UploadService {
 
   constructor(
     private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
 
     @Inject(KafkaMicroserviceNames.AccountMS)
     private accountClient: ClientKafka,
@@ -36,6 +38,8 @@ export class UploadService {
   }
 
   async createPostSaga(payload: PostInitData) {
+    const FEED_MS_URL = this.configService.getOrThrow('FEED_MS_URL');
+
     const createPostSaga = new SagaOrchestrator<PostInitData & PostPayload>(
       'CREATE_POST',
       payload,
@@ -51,7 +55,7 @@ export class UploadService {
         const result = await lastValueFrom(
           this.httpService.post<UploadSinglePostFile.Response>(
             // TODO set in config
-            'http://localhost:3040/upload/post',
+            `${FEED_MS_URL}/upload/post`,
             formData,
             {
               headers,
@@ -67,7 +71,7 @@ export class UploadService {
         await lastValueFrom(
           this.httpService.delete<FeedDeleteFile.Response>(
             // TODO set in config
-            `http://localhost:3040/upload/${uploadedFile.id}`,
+            `${FEED_MS_URL}/upload/${uploadedFile.id}`,
           ),
         );
       })
