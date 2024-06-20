@@ -28,7 +28,7 @@ export class PostEntity {
 
   // relations
 
-  @OneToMany(() => FileEntity, (file) => file.post)
+  @OneToMany(() => FileEntity, (file) => file.user)
   files: FileEntity[];
 
   @Column({ name: 'user_id' })
