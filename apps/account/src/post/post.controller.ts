@@ -9,17 +9,17 @@ export class PostController {
 
   @MessagePattern(CreatePostUser.topic)
   async createPost(@Payload() data: CreatePostUser.Request) {
-    // await this.postRepository.create({
-    //   userId,
-    //   content,
-    //   files,
-    // });
-    console.log(data);
-    console.log('adasdsa');
-    console.log('adasdsa');
-    console.log('adasdsa');
-    console.log('adasdsa');
-    console.log('adasdsa');
-    return 'asdasdas';
+    try {
+      const post = await this.postRepository.create({
+        userId: data.userId,
+        content: data.content,
+        files: data.files,
+      });
+
+      return post;
+    } catch (error) {
+      console.error(error?.message);
+      return null;
+    }
   }
 }

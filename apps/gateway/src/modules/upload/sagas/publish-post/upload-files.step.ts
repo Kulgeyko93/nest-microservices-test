@@ -1,6 +1,5 @@
 import {
   FeedDeleteFile,
-  SagaStep,
   UploadPostFilesStep,
   UploadSinglePostFile,
 } from '@lib/common';
@@ -8,14 +7,10 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import FormData from 'form-data';
 import { lastValueFrom } from 'rxjs';
+import { UploadFileStepSaga } from '../../types/types';
 
 @Injectable()
-export class UploadPostFiles extends SagaStep<
-  UploadPostFilesStep,
-  UploadSinglePostFile.Response,
-  string,
-  any
-> {
+export class UploadPostFile extends UploadFileStepSaga {
   constructor(private readonly httpService: HttpService) {
     super();
   }
