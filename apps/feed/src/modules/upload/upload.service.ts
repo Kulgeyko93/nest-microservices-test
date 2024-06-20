@@ -22,6 +22,7 @@ export class UploadService {
       size: file.size,
       buffer: file.buffer,
     };
+
     const result = await this.uploadFile({
       file: filePayload,
       ...data,

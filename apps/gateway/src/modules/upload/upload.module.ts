@@ -7,7 +7,7 @@ import { UploadController } from './upload.controller';
 @Module({
   imports: [
     HttpModule.register({
-      timeout: 10000,
+      timeout: 60000,
       maxRedirects: 0,
     }),
   ],

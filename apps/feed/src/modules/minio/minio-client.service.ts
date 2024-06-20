@@ -1,13 +1,12 @@
-import { ConfigService } from '@nestjs/config';
 import {
+  BadRequestException,
+  HttpException,
   Injectable,
   Logger,
-  HttpException,
-  BadRequestException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { MinioService } from 'nestjs-minio-client';
-
-import * as crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 import { BufferedFile } from './helpers/interfaces';
 
 @Injectable()
@@ -39,24 +38,16 @@ export class MinioClientService {
 
     await this.findOrCreateBucket(baseBucket);
 
-    const temp_filename = Date.now().toString();
-    const hashedFileName = crypto
-      .createHash('md5')
-      .update(temp_filename)
-      .digest('hex');
-    const ext = file.originalname.substring(
-      file.originalname.lastIndexOf('.'),
-      file.originalname.length,
-    );
-
-    const filename = hashedFileName + ext;
+    const filename = uuidv4();
     const fileBuffer = file.buffer;
+
     this.minio.client.putObject(baseBucket, filename, fileBuffer, file.size, {
       'Content-type': 'image',
     });
 
     return {
       url: `http://${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}/${baseBucket}/${filename}`,
+      filename,
     };
   }
 

@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,11 +22,11 @@ export class FileEntity implements FileEntityContract {
   @Column({ name: 'user_id' })
   userId: string;
 
-  @OneToOne(() => UserEntity, (user) => user.avatar)
+  @ManyToOne(() => UserEntity, (user) => user.files)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
-  @Column({ name: 'post_id', nullable: true })
+  @Column({ name: 'post_id', nullable: true, default: null })
   postId: string;
 
   @ManyToOne(() => PostEntity, (post) => post.files)

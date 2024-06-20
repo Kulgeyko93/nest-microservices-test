@@ -4,6 +4,7 @@
     "kafkajs",
     "MINIO",
     "supergraph",
-    "typeorm"
+    "typeorm",
+    "uuidv"
   ]
 }
