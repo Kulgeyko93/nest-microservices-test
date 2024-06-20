@@ -1,10 +1,4 @@
-import {
-  CurrentUser,
-  FeedDeleteFile,
-  SagaStep,
-  UploadSinglePostFile,
-  UserEntity,
-} from '@lib/common';
+import { CurrentUser, UploadSinglePostFile, UserEntity } from '@lib/common';
 import {
   Body,
   Controller,
@@ -15,24 +9,20 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreatePostStep } from './sagas/publish-post/create-post.step';
-import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
+import { UploadPostFile } from './sagas/publish-post/upload-files.step';
+import { UploadFileStep } from './types/types';
 
 @Controller('upload')
 export class UploadController {
-  private steps: [
-    SagaStep<
-      UploadSinglePostFile.Response,
-      UploadSinglePostFile.Response,
-      string,
-      FeedDeleteFile.Response
-    >,
-  ] = [];
-  private successfulSteps: SagaStep<any, any, any, any>[] = [];
+  private steps: [UploadFileStep];
+  private successfulSteps: [UploadFileStep];
 
   constructor(
-    private readonly uploadPostFileStep: UploadPostFiles,
+    private readonly uploadPostFileStep: UploadPostFile,
     private readonly createPostStep: CreatePostStep,
-  ) {}
+  ) {
+    this.steps = [this.uploadPostFileStep];
+  }
 
   @Post('publish-post')
   @UseInterceptors(FileInterceptor('file'))
@@ -42,20 +32,42 @@ export class UploadController {
     @CurrentUser() { id: userId }: UserEntity,
   ) {
     try {
-      const uploadedFiles = await this.uploadPostFileStep.invoke({
+      let stepData: UploadSinglePostFile.Request | any = {
         file,
         userId,
-      });
+      };
 
-      this.successfulSteps.push(this.uploadPostFileStep);
+      for (let i = 0; i < this.steps.length; i += 1) {
+        if (!stepData) break;
 
-      const createdPost = await this.createPostStep.invoke({
-        userId,
-        content,
-        file: uploadedFiles.file,
-      });
+        const step = this.steps[i];
 
-      return createdPost;
+        const result = await step.invoke(stepData);
+
+        stepData =
+          this.steps[i] instanceof CreatePostStep
+            ? {
+                userId,
+                content,
+                file: result.file,
+              }
+            : null;
+      }
+
+      // const uploadedFiles = await this.uploadPostFileStep.invoke({
+      //   file,
+      //   userId,
+      // });
+
+      // this.successfulSteps.push(this.uploadPostFileStep);
+
+      // const createdPost = await this.createPostStep.invoke({
+      //   userId,
+      //   content,
+      //   file: uploadedFiles.file,
+      // });
+
+      // return createdPost;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }

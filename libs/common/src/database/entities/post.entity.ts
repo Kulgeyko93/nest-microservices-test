@@ -29,7 +29,7 @@ export class PostEntity {
   // relations
 
   @OneToMany(() => FileEntity, (file) => file.user)
-  files: FileEntity[];
+  files?: FileEntity[];
 
   @Column({ name: 'user_id' })
   @Field()
