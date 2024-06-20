@@ -17,6 +17,9 @@ export class FileEntity implements FileEntityContract {
   @Column({ name: 'file_url' })
   fileUrl: string;
 
+  @Column({ name: 'file_name' })
+  filename: string;
+
   // relations
 
   @Column({ name: 'user_id' })
