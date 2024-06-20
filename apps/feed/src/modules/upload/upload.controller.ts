@@ -1,8 +1,15 @@
-import { MinioBuckets, UploadSinglePostFile } from '@lib/common';
+import {
+  FeedDeleteFile,
+  MinioBuckets,
+  UploadSinglePostFile,
+} from '@lib/common';
 import {
   Body,
   Controller,
+  Delete,
   HttpException,
+  Param,
+  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -14,26 +21,6 @@ import { UploadService } from './upload.service';
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
-
-  @Post('avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() { userId }: Record<'userId', string>,
-  ) {
-    try {
-      const uploadedFile = await this.uploadService.storeFile({
-        file,
-        userId,
-        baseBucket: MinioBuckets.Avatar,
-      });
-
-      return { uploadedFile };
-    } catch (error) {
-      throw new HttpException(error?.message, error?.status);
-    }
-  }
-
   @Post('post')
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
@@ -49,6 +36,22 @@ export class UploadController {
       return { file: uploadedFile };
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
+    }
+  }
+
+  @Delete(':id')
+  async deleteFile(
+    @Body() data: FeedDeleteFile.Request,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<FeedDeleteFile.Response> {
+    try {
+      await this.uploadService.deleteFile(id, MinioBuckets.Post);
+
+      return {
+        result: 'success',
+      };
+    } catch (error) {
+      throw new HttpException(error?.message, error?.code);
     }
   }
 }

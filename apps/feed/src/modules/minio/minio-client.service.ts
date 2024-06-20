@@ -51,13 +51,10 @@ export class MinioClientService {
     };
   }
 
-  async delete(objetName: string, baseBucket: string) {
+  async delete(objetName: string, baseBucket: string): Promise<void> {
     try {
-      const result = await this.minio.client.removeObject(
-        baseBucket,
-        objetName,
-      );
-      return result;
+      await this.minio.client.removeObject(baseBucket, objetName);
+      return;
     } catch (error) {
       throw new HttpException(error?.message, error.status);
     }

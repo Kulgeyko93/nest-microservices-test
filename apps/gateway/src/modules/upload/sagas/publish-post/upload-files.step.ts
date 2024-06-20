@@ -1,5 +1,5 @@
-import { lastValueFrom } from 'rxjs';
 import {
+  FeedDeleteFile,
   SagaStep,
   UploadPostFilesStep,
   UploadSinglePostFile,
@@ -7,9 +7,15 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import FormData from 'form-data';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
-export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
+export class UploadPostFiles extends SagaStep<
+  UploadPostFilesStep,
+  UploadSinglePostFile.Response,
+  string,
+  any
+> {
   constructor(private readonly httpService: HttpService) {
     super();
   }
@@ -32,6 +38,7 @@ export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
 
     const result = await lastValueFrom(
       this.httpService.post<UploadSinglePostFile.Response>(
+        // TODO set in config
         'http://localhost:3040/upload/post',
         formData,
         {
@@ -43,8 +50,14 @@ export class UploadPostFiles extends SagaStep<UploadPostFilesStep, any> {
     return result.data;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  withCompensation({ file, userId }: UploadPostFilesStep): Promise<string[]> {
-    throw new Error('Method not implemented.');
+  async withCompensation(id: string): Promise<any> {
+    const result = await lastValueFrom(
+      this.httpService.delete<FeedDeleteFile.Response>(
+        // TODO set in config
+        `http://localhost:3040/upload/${id}`,
+      ),
+    );
+    return result.data;
   }
 
   private sendToFeedService() {}

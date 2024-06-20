@@ -1,39 +1,37 @@
-import { HttpService } from '@nestjs/axios';
+import {
+  CurrentUser,
+  FeedDeleteFile,
+  SagaStep,
+  UploadSinglePostFile,
+  UserEntity,
+} from '@lib/common';
 import {
   Body,
   Controller,
   HttpException,
-  Inject,
   Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  CurrentUser,
-  // CurrentUser,
-  // IUserEntityContract,
-  KafkaMicroserviceNames,
-  SagaStep,
-  UserEntity,
-} from '@lib/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
 import { CreatePostStep } from './sagas/publish-post/create-post.step';
+import { UploadPostFiles } from './sagas/publish-post/upload-files.step';
 
 @Controller('upload')
 export class UploadController {
-  private steps: SagaStep<any, any>[] = [];
-  private successfulSteps: SagaStep<any, any>[] = [];
+  private steps: [
+    SagaStep<
+      UploadSinglePostFile.Response,
+      UploadSinglePostFile.Response,
+      string,
+      FeedDeleteFile.Response
+    >,
+  ] = [];
+  private successfulSteps: SagaStep<any, any, any, any>[] = [];
 
   constructor(
-    @Inject(KafkaMicroserviceNames.AccountMS)
-    private readonly accountClient: ClientKafka,
-
     private readonly uploadPostFileStep: UploadPostFiles,
     private readonly createPostStep: CreatePostStep,
-
-    private readonly httpService: HttpService,
   ) {}
 
   @Post('publish-post')
