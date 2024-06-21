@@ -69,7 +69,7 @@ export class UploadService implements OnModuleInit {
       })
       .withCompensate(async () => {
         const createdPost: PostEntity = createPostSaga.getParam('post');
-        const post = await lastValueFrom(
+        await lastValueFrom(
           this.accountClient.send<DeletePostUser.Response>(
             DeletePostUser.topic,
             {
@@ -77,8 +77,6 @@ export class UploadService implements OnModuleInit {
             },
           ),
         );
-
-        createPostSaga.setParam('post', post);
       })
       .step(async () => {
         const file = createPostSaga.getParam('file');
@@ -116,12 +114,14 @@ export class UploadService implements OnModuleInit {
           postId: createPostSaga.getParam('post').id,
         };
 
-        await lastValueFrom(
+        const res = await lastValueFrom(
           this.feedClient.send<FeedSaveUploadedFile.Response>(
             FeedSaveUploadedFile.topic,
             message,
           ),
         );
+
+        const aaa = res;
       })
       .start();
 

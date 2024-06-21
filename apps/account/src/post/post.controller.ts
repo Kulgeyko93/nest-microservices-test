@@ -10,13 +10,9 @@ export class PostController {
   @MessagePattern(CreatePostUser.topic)
   async createPost(@Payload() data: CreatePostUser.Request) {
     try {
-      const post = await this.postRepository.create({
-        userId: data.userId,
-        content: data.content,
-        files: data.files,
-      });
+      const post = await this.postRepository.create(data);
 
-      return post;
+      return JSON.stringify(post);
     } catch (error) {
       console.error(error?.message);
       return null;
