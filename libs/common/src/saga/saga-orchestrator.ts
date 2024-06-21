@@ -7,7 +7,7 @@ interface SagaStep<T> {
 
 export class SagaOrchestrator<T> {
   private readonly logger = new Logger(SagaOrchestrator.name);
-  private name = 'Unknown';
+  private name = '';
   private currentStep = 0;
   private params: T = {} as T;
   private steps: SagaStep<T>[] = [];
