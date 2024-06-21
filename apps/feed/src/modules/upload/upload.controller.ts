@@ -9,7 +9,6 @@ import {
   Delete,
   HttpException,
   Param,
-  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -40,10 +39,7 @@ export class UploadController {
   }
 
   @Delete(':id')
-  async deleteFile(
-    @Body() data: FeedDeleteFile.Request,
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<FeedDeleteFile.Response> {
+  async deleteFile(@Param('id') id: string): Promise<FeedDeleteFile.Response> {
     try {
       await this.uploadService.deleteFile(id, MinioBuckets.Post);
 

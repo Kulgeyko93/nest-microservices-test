@@ -1,12 +1,15 @@
 import {
+  AccountValidateUser,
   CreatePostUser,
+  DeletePostUser,
   FeedDeleteFile,
   FileEntity,
   KafkaMicroserviceNames,
+  PostEntity,
   SagaOrchestrator,
 } from '@lib/common';
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { UploadSinglePostFile } from '@lib/common';
 import FormData from 'form-data';
@@ -20,11 +23,11 @@ export interface PostInitData {
 }
 
 export interface PostPayload {
-  uploadedFiles?: FileEntity;
+  post?: PostEntity;
 }
 
 @Injectable()
-export class UploadService {
+export class UploadService implements OnModuleInit {
   private readonly logger: Logger;
 
   constructor(
@@ -36,6 +39,9 @@ export class UploadService {
   ) {
     this.logger = new Logger(UploadService.name);
   }
+  onModuleInit() {
+    throw new Error('Method not implemented.');
+  }
 
   async createPostSaga(payload: PostInitData) {
     const FEED_MS_URL = this.configService.getOrThrow('FEED_MS_URL');
@@ -46,6 +52,60 @@ export class UploadService {
     );
 
     await createPostSaga
+      // .step(async () => {
+      //   const file = createPostSaga.getParam('file');
+      //   const userId = createPostSaga.getParam('userId');
+
+      //   const { formData, headers } = this.createFormData({ file, userId });
+
+      //   const result = await lastValueFrom(
+      //     this.httpService.post<UploadSinglePostFile.Response>(
+      //       `${FEED_MS_URL}/upload/post`,
+      //       formData,
+      //       {
+      //         headers,
+      //       },
+      //     ),
+      //   );
+
+      //   createPostSaga.setParam('uploadedFiles', result.data.file);
+      // })
+      // .withCompensate(async () => {
+      //   const uploadedFile: FileEntity =
+      //     createPostSaga.getParam('uploadedFiles');
+      //   await lastValueFrom(
+      //     this.httpService.delete<FeedDeleteFile.Response>(
+      //       `${FEED_MS_URL}/upload/${uploadedFile.id}`,
+      //     ),
+      //   );
+      // })
+      .step(async () => {
+        const data: CreatePostUser.Request = {
+          userId: createPostSaga.getParam('userId'),
+          content: createPostSaga.getParam('content'),
+        };
+        const post = await lastValueFrom(
+          this.accountClient.send<CreatePostUser.Response>(
+            CreatePostUser.topic,
+            data,
+          ),
+        );
+
+        createPostSaga.setParam('post', post);
+      })
+      .withCompensate(async () => {
+        const createdPost: PostEntity = createPostSaga.getParam('post');
+        const post = await lastValueFrom(
+          this.accountClient.send<DeletePostUser.Response>(
+            DeletePostUser.topic,
+            {
+              id: createdPost.id,
+            },
+          ),
+        );
+
+        createPostSaga.setParam('post', post);
+      })
       .step(async () => {
         const file = createPostSaga.getParam('file');
         const userId = createPostSaga.getParam('userId');
@@ -54,7 +114,6 @@ export class UploadService {
 
         const result = await lastValueFrom(
           this.httpService.post<UploadSinglePostFile.Response>(
-            // TODO set in config
             `${FEED_MS_URL}/upload/post`,
             formData,
             {
@@ -62,32 +121,19 @@ export class UploadService {
             },
           ),
         );
+      })
 
-        createPostSaga.setParam('uploadedFiles', result.data.file);
-      })
-      .withCompensate(async () => {
-        const uploadedFile: FileEntity =
-          createPostSaga.getParam('uploadedFiles');
-        await lastValueFrom(
-          this.httpService.delete<FeedDeleteFile.Response>(
-            // TODO set in config
-            `${FEED_MS_URL}/upload/${uploadedFile.id}`,
-          ),
-        );
-      })
-      .step(async () => {
-        const data: CreatePostUser.Request = {
-          userId: createPostSaga.getParam('userId'),
-          content: createPostSaga.getParam('content'),
-          files: [createPostSaga.getParam('uploadedFiles')],
-        };
-        await lastValueFrom(
-          this.accountClient.send<CreatePostUser.Response>(
-            CreatePostUser.topic,
-            data,
-          ),
-        );
-      })
+      //   createPostSaga.setParam('uploadedFiles', result.data.file);
+      // })
+      // .withCompensate(async () => {
+      //   const uploadedFile: FileEntity =
+      //     createPostSaga.getParam('uploadedFiles');
+      //   await lastValueFrom(
+      //     this.httpService.delete<FeedDeleteFile.Response>(
+      //       `${FEED_MS_URL}/upload/${uploadedFile.id}`,
+      //     ),
+      //   );
+      // })
       .start();
 
     return {
@@ -95,12 +141,17 @@ export class UploadService {
     };
   }
 
-  createFormData({ file, userId }: Pick<PostInitData, 'file' | 'userId'>) {
+  createFormData({
+    file,
+    userId,
+    postId,
+  }: Pick<PostInitData, 'file' | 'userId'>) {
     const formData = new FormData();
     formData.append('file', file.buffer, {
       filename: file.originalname,
       filepath: file.path,
     });
+    formData.append('userId', userId);
     formData.append('userId', userId);
 
     const headers = {
@@ -112,5 +163,16 @@ export class UploadService {
       formData,
       headers,
     };
+  }
+
+  async onModuleInit() {
+    this.accountClient.subscribeToResponseOf(CreatePostUser.topic);
+    this.accountClient.subscribeToResponseOf(AccountValidateUser.topic);
+    this.accountClient.subscribeToResponseOf(DeletePostUser.topic);
+    await this.accountClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.accountClient.close();
   }
 }
