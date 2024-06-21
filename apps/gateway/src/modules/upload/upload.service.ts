@@ -117,7 +117,7 @@ export class UploadService implements OnModuleInit {
         };
 
         await lastValueFrom(
-          this.accountClient.send<FeedSaveUploadedFile.Response>(
+          this.feedClient.send<FeedSaveUploadedFile.Response>(
             FeedSaveUploadedFile.topic,
             message,
           ),
