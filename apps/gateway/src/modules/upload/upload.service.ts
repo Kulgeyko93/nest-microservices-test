@@ -2,8 +2,6 @@ import {
   AccountValidateUser,
   CreatePostUser,
   DeletePostUser,
-  FeedDeleteFile,
-  FileEntity,
   KafkaMicroserviceNames,
   PostEntity,
   SagaOrchestrator,
@@ -24,6 +22,8 @@ export interface PostInitData {
 
 export interface PostPayload {
   post?: PostEntity;
+  url?: string;
+  filename?: string;
 }
 
 @Injectable()
@@ -36,11 +36,11 @@ export class UploadService implements OnModuleInit {
 
     @Inject(KafkaMicroserviceNames.AccountMS)
     private accountClient: ClientKafka,
+
+    @Inject(KafkaMicroserviceNames.FeedMS)
+    private feedClient: ClientKafka,
   ) {
     this.logger = new Logger(UploadService.name);
-  }
-  onModuleInit() {
-    throw new Error('Method not implemented.');
   }
 
   async createPostSaga(payload: PostInitData) {
@@ -121,19 +121,38 @@ export class UploadService implements OnModuleInit {
             },
           ),
         );
+
+        createPostSaga.setParam('url', result.data.url);
+        createPostSaga.setParam('filename', result.data.filename);
+      })
+      .withCompensate(async () => {
+        const filename: string = createPostSaga.getParam('filename');
+        await lastValueFrom(
+          this.httpService.delete(
+            `${FEED_MS_URL}/upload/post/store/${filename}`,
+          ),
+        );
       })
 
-      //   createPostSaga.setParam('uploadedFiles', result.data.file);
-      // })
-      // .withCompensate(async () => {
-      //   const uploadedFile: FileEntity =
-      //     createPostSaga.getParam('uploadedFiles');
-      //   await lastValueFrom(
-      //     this.httpService.delete<FeedDeleteFile.Response>(
-      //       `${FEED_MS_URL}/upload/${uploadedFile.id}`,
-      //     ),
-      //   );
-      // })
+      .step(async () => {
+        const file = createPostSaga.getParam('file');
+        const userId = createPostSaga.getParam('userId');
+
+        const { formData, headers } = this.createFormData({ file, userId });
+
+        const result = await lastValueFrom(
+          this.httpService.post<UploadSinglePostFile.Response>(
+            `${FEED_MS_URL}/upload/post`,
+            formData,
+            {
+              headers,
+            },
+          ),
+        );
+
+        createPostSaga.setParam('url', result.data.url);
+        createPostSaga.setParam('filename', result.data.filename);
+      })
       .start();
 
     return {
@@ -141,11 +160,7 @@ export class UploadService implements OnModuleInit {
     };
   }
 
-  createFormData({
-    file,
-    userId,
-    postId,
-  }: Pick<PostInitData, 'file' | 'userId'>) {
+  createFormData({ file, userId }: Pick<PostInitData, 'file' | 'userId'>) {
     const formData = new FormData();
     formData.append('file', file.buffer, {
       filename: file.originalname,

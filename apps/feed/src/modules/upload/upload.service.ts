@@ -1,7 +1,7 @@
 import { UploadRepository } from './upload.repository';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { MinioClientService } from '../minio/minio-client.service';
-import { MinioBuckets, StoreFilePayload, UploadFilePayload } from '@lib/common';
+import { MinioBuckets, StoreFilePayload } from '@lib/common';
 
 @Injectable()
 export class UploadService {
@@ -27,6 +27,10 @@ export class UploadService {
     return true;
   }
 
+  async deleteFileInStore(filename: string, basket: MinioBuckets) {
+    return this.minioClientService.delete(filename, basket);
+  }
+
   async storeFile({ file, ...data }: StoreFilePayload) {
     const filePayload = {
       fieldname: file.fieldname,
@@ -36,26 +40,11 @@ export class UploadService {
       buffer: file.buffer,
     };
 
-    const result = await this.uploadFile({
-      file: filePayload,
-      ...data,
-    });
-
-    return result;
-  }
-
-  async uploadFile({ file, userId, baseBucket }: UploadFilePayload) {
-    const uploaded_image = await this.minioClientService.upload(
-      file,
-      baseBucket,
+    const uploadedFile = await this.minioClientService.upload(
+      filePayload,
+      data.baseBucket,
     );
 
-    const fileEntity = await this.uploadRepository.create({
-      fileUrl: uploaded_image.url,
-      userId,
-      filename: uploaded_image.filename,
-    });
-
-    return fileEntity;
+    return uploadedFile;
   }
 }

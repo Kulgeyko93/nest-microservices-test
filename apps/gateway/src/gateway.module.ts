@@ -20,7 +20,10 @@ import { AuthMiddleware } from './core/middleware/auth.middleware';
     ),
     ClientsModule.registerAsync({
       isGlobal: true,
-      clients: [clientModuleConfigs[KafkaMicroserviceNames.AccountMS]],
+      clients: [
+        clientModuleConfigs[KafkaMicroserviceNames.AccountMS],
+        clientModuleConfigs[KafkaMicroserviceNames.FeedMS],
+      ],
     }),
     UploadModule,
   ],
