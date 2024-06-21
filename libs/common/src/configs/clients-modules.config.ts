@@ -60,6 +60,9 @@ export const clientModuleConfigs: Record<
         consumer: {
           groupId: KafkaConsumerGroups.FeedConsumer,
         },
+        producer: {
+          allowAutoTopicCreation: true,
+        },
       },
     }),
     inject: [ConfigService],

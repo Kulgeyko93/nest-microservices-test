@@ -1,5 +1,3 @@
-import { FileEntity } from '../../database';
-
 export namespace UploadSinglePostFile {
   export const topic = 'feed.upload-single-file.command';
 
@@ -9,6 +7,7 @@ export namespace UploadSinglePostFile {
   }
 
   export class Response {
-    file: FileEntity;
+    url: string;
+    filename: string;
   }
 }

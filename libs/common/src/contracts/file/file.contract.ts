@@ -2,7 +2,7 @@ import { IUserEntityContract } from '../user/user.contract';
 
 export interface FileEntityContract {
   id: string;
-  fileUrl: string;
+  url: string;
 
   userId: string;
   user?: IUserEntityContract;

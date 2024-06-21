@@ -1,15 +1,16 @@
 import {
   FeedDeleteFile,
+  FeedSaveUploadedFile,
   MinioBuckets,
   UploadSinglePostFile,
 } from '@lib/common';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   HttpException,
   Param,
-  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -17,10 +18,15 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { UploadService } from './upload.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { UploadRepository } from './upload.repository';
 
 @Controller('upload')
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(
+    private readonly uploadService: UploadService,
+    private readonly uploadRepository: UploadRepository,
+  ) {}
   @Post('post')
   @UseInterceptors(FileInterceptor('file'))
   async uploadPost(
@@ -33,25 +39,36 @@ export class UploadController {
         userId,
         baseBucket: MinioBuckets.Post,
       });
-      return { file: uploadedFile };
+      return uploadedFile;
     } catch (error) {
       throw new HttpException(error?.message, error?.status);
     }
   }
 
-  @Delete(':id')
+  @Delete('post/store/:filename')
   async deleteFile(
-    @Body() data: FeedDeleteFile.Request,
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('filename') filename: string,
   ): Promise<FeedDeleteFile.Response> {
     try {
-      await this.uploadService.deleteFile(id, MinioBuckets.Post);
+      await this.uploadService.deleteFileInStore(filename, MinioBuckets.Post);
 
       return {
         result: 'success',
       };
     } catch (error) {
       throw new HttpException(error?.message, error?.code);
+    }
+  }
+
+  @MessagePattern(FeedSaveUploadedFile.topic)
+  async deletePost(@Payload() data: FeedSaveUploadedFile.Request) {
+    try {
+      const file = await this.uploadRepository.create(data);
+
+      return JSON.stringify(file);
+    } catch (error) {
+      console.error(error?.message);
+      throw new BadRequestException();
     }
   }
 }

@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AbstractRepository, FileEntity } from '@lib/common';
-import { FileEntityContract } from '@lib/common';
 
 @Injectable()
 export class UploadRepository extends AbstractRepository<FileEntity> {
@@ -15,15 +14,13 @@ export class UploadRepository extends AbstractRepository<FileEntity> {
     super();
   }
 
-  async createOrUpdate(
-    payload: Pick<FileEntityContract, 'fileUrl' | 'userId'>,
-  ) {
+  async createOrUpdate(payload: Pick<FileEntity, 'url' | 'userId'>) {
     const file = await this.findOne({ userId: payload.userId });
 
     if (!file) {
       return await this.create(payload);
     }
 
-    await this.update({ userId: payload.userId }, { fileUrl: payload.fileUrl });
+    await this.update({ userId: payload.userId }, { url: payload.url });
   }
 }
