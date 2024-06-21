@@ -7,15 +7,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { FileEntityContract, PostEntity, UserEntity } from '@lib/common';
+import { PostEntity, UserEntity } from '@lib/common';
 
 @Entity('file')
-export class FileEntity implements FileEntityContract {
+export class FileEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'file_url' })
-  fileUrl: string;
+  @Column({ name: 'url' })
+  url: string;
 
   @Column({ name: 'file_name' })
   filename: string;

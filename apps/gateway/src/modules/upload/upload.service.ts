@@ -114,14 +114,12 @@ export class UploadService implements OnModuleInit {
           postId: createPostSaga.getParam('post').id,
         };
 
-        const res = await lastValueFrom(
+        await lastValueFrom(
           this.feedClient.send<FeedSaveUploadedFile.Response>(
             FeedSaveUploadedFile.topic,
             message,
           ),
         );
-
-        const aaa = res;
       })
       .start();
 
@@ -154,8 +152,11 @@ export class UploadService implements OnModuleInit {
     this.accountClient.subscribeToResponseOf(CreatePostUser.topic);
     this.accountClient.subscribeToResponseOf(AccountValidateUser.topic);
     this.accountClient.subscribeToResponseOf(DeletePostUser.topic);
-    this.accountClient.subscribeToResponseOf(FeedSaveUploadedFile.topic);
+
+    this.feedClient.subscribeToResponseOf(FeedSaveUploadedFile.topic);
+
     await this.accountClient.connect();
+    await this.feedClient.connect();
   }
 
   async onModuleDestroy() {

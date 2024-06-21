@@ -5,6 +5,7 @@ import {
   UploadSinglePostFile,
 } from '@lib/common';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -67,7 +68,7 @@ export class UploadController {
       return JSON.stringify(file);
     } catch (error) {
       console.error(error?.message);
-      return null;
+      throw new BadRequestException();
     }
   }
 }
