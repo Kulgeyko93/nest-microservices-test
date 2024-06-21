@@ -20,9 +20,6 @@ export class FileEntity {
   @Column({ name: 'file_name' })
   filename: string;
 
-  @Column({ name: 'file_name' })
-  filename: string;
-
   // relations
 
   @Column({ name: 'user_id' })
