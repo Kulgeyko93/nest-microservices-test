@@ -6,26 +6,15 @@ import {
   KafkaMicroserviceNames,
   PostEntity,
   SagaOrchestrator,
+  UploadSinglePostFile,
 } from '@lib/common';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
-import { UploadSinglePostFile } from '@lib/common';
 import FormData from 'form-data';
 import { lastValueFrom } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
-
-export interface PostInitData {
-  userId: string;
-  content: string;
-  file: Express.Multer.File;
-}
-
-export interface PostPayload {
-  post?: PostEntity;
-  url?: string;
-  filename?: string;
-}
+import { PostInitData, PostPayload } from './helpers/types';
 
 @Injectable()
 export class UploadService implements OnModuleInit {
@@ -37,7 +26,6 @@ export class UploadService implements OnModuleInit {
 
     @Inject(KafkaMicroserviceNames.AccountMS)
     private accountClient: ClientKafka,
-
     @Inject(KafkaMicroserviceNames.FeedMS)
     private feedClient: ClientKafka,
   ) {

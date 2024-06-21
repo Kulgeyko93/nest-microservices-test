@@ -1,4 +1,4 @@
-import { UserEntity } from '../../database';
+import { UserEntity } from '../../../database';
 
 export namespace AccountValidateUser {
   export const topic = 'account.validate-user.command';
