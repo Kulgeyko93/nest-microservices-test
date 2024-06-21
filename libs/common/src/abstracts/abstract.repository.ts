@@ -15,7 +15,7 @@ export abstract class AbstractRepository<T extends ObjectLiteral> {
 
   protected repository: Repository<T>;
 
-  create(dto: DeepPartial<T>): Promise<T> {
+  async create(dto: DeepPartial<T>): Promise<T> {
     const prepared = this.repository.create(dto);
     return this.repository.save(prepared);
   }

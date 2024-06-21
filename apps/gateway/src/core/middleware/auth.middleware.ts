@@ -57,8 +57,4 @@ export class AuthMiddleware implements NestMiddleware {
     this.accountClient.subscribeToResponseOf(AccountValidateUser.topic);
     await this.accountClient.connect();
   }
-
-  async onModuleDestroy() {
-    await this.accountClient.close();
-  }
 }
