@@ -2,6 +2,7 @@ import {
   AccountValidateUser,
   CreatePostUser,
   DeletePostUser,
+  FeedSaveUploadedFile,
   KafkaMicroserviceNames,
   PostEntity,
   SagaOrchestrator,
@@ -52,33 +53,6 @@ export class UploadService implements OnModuleInit {
     );
 
     await createPostSaga
-      // .step(async () => {
-      //   const file = createPostSaga.getParam('file');
-      //   const userId = createPostSaga.getParam('userId');
-
-      //   const { formData, headers } = this.createFormData({ file, userId });
-
-      //   const result = await lastValueFrom(
-      //     this.httpService.post<UploadSinglePostFile.Response>(
-      //       `${FEED_MS_URL}/upload/post`,
-      //       formData,
-      //       {
-      //         headers,
-      //       },
-      //     ),
-      //   );
-
-      //   createPostSaga.setParam('uploadedFiles', result.data.file);
-      // })
-      // .withCompensate(async () => {
-      //   const uploadedFile: FileEntity =
-      //     createPostSaga.getParam('uploadedFiles');
-      //   await lastValueFrom(
-      //     this.httpService.delete<FeedDeleteFile.Response>(
-      //       `${FEED_MS_URL}/upload/${uploadedFile.id}`,
-      //     ),
-      //   );
-      // })
       .step(async () => {
         const data: CreatePostUser.Request = {
           userId: createPostSaga.getParam('userId'),
@@ -135,23 +109,19 @@ export class UploadService implements OnModuleInit {
       })
 
       .step(async () => {
-        const file = createPostSaga.getParam('file');
-        const userId = createPostSaga.getParam('userId');
+        const message: FeedSaveUploadedFile.Request = {
+          filename: createPostSaga.getParam('filename'),
+          url: createPostSaga.getParam('url'),
+          userId: createPostSaga.getParam('userId'),
+          postId: createPostSaga.getParam('post').id,
+        };
 
-        const { formData, headers } = this.createFormData({ file, userId });
-
-        const result = await lastValueFrom(
-          this.httpService.post<UploadSinglePostFile.Response>(
-            `${FEED_MS_URL}/upload/post`,
-            formData,
-            {
-              headers,
-            },
+        await lastValueFrom(
+          this.accountClient.send<FeedSaveUploadedFile.Response>(
+            FeedSaveUploadedFile.topic,
+            message,
           ),
         );
-
-        createPostSaga.setParam('url', result.data.url);
-        createPostSaga.setParam('filename', result.data.filename);
       })
       .start();
 
@@ -184,6 +154,7 @@ export class UploadService implements OnModuleInit {
     this.accountClient.subscribeToResponseOf(CreatePostUser.topic);
     this.accountClient.subscribeToResponseOf(AccountValidateUser.topic);
     this.accountClient.subscribeToResponseOf(DeletePostUser.topic);
+    this.accountClient.subscribeToResponseOf(FeedSaveUploadedFile.topic);
     await this.accountClient.connect();
   }
 
