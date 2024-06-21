@@ -49,7 +49,7 @@ export class UploadController {
     @Param('filename') filename: string,
   ): Promise<FeedDeleteFile.Response> {
     try {
-      await this.uploadService.deleteFile(filename, MinioBuckets.Post);
+      await this.uploadService.deleteFileInStore(filename, MinioBuckets.Post);
 
       return {
         result: 'success',
@@ -64,7 +64,7 @@ export class UploadController {
     try {
       const file = await this.uploadRepository.create(data);
 
-      return file;
+      return JSON.stringify(file);
     } catch (error) {
       console.error(error?.message);
       return null;
