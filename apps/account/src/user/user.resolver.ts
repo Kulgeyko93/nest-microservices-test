@@ -1,8 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserRepository } from './repositories/user.repository';
-import { UserEntity } from '@lib/common';
+import { CurrentGqlUser, UserEntity } from '@lib/common';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthAccessTokenGuard } from '../auth/guards/gql-auth-access-token.guard';
+import { GqlAuthAccessTokenGuard } from '@lib/common/auth-common';
 
 @Resolver(() => UserEntity)
 export class UserResolver {
@@ -12,6 +12,12 @@ export class UserResolver {
   @UseGuards(GqlAuthAccessTokenGuard)
   findAll() {
     return this.usersRepository.find({});
+  }
+
+  @Query(() => UserEntity, { name: 'me' })
+  @UseGuards(GqlAuthAccessTokenGuard)
+  findMe(@CurrentGqlUser() user: UserEntity) {
+    return user;
   }
 
   @Query(() => UserEntity, { name: 'user' })
