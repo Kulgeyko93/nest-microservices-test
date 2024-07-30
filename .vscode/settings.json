@@ -1,8 +1,10 @@
 {
   "cSpell.words": [
     "fieldname",
+    "kafkajs",
     "MINIO",
     "supergraph",
-    "typeorm"
+    "typeorm",
+    "uuidv"
   ]
 }

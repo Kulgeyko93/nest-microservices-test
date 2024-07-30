@@ -2,23 +2,28 @@ import { NestFactory } from '@nestjs/core';
 import { AccountModule } from './account.module';
 import { ConfigService } from '@nestjs/config';
 import { ZodValidationPipe } from 'nestjs-zod';
-import { Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { KafkaClients, KafkaConsumerGroups } from '@lib/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AccountModule);
   const configService = app.get(ConfigService);
 
   const port = +configService.get('HTTP_PORT') || 3030;
-  const tcpPort = +configService.get('TCP_PORT');
-  const tcpHost = configService.get('TCP_HOST');
+  const broker = configService.getOrThrow('KAFKA_BROKER');
 
   app.useGlobalPipes(new ZodValidationPipe());
 
-  app.connectMicroservice({
-    transport: Transport.TCP,
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.KAFKA,
     options: {
-      host: tcpHost,
-      port: tcpPort,
+      client: {
+        clientId: KafkaClients.AccountClient,
+        brokers: [broker],
+      },
+      consumer: {
+        groupId: KafkaConsumerGroups.AccountConsumer,
+      },
     },
   });
 

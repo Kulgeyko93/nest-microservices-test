@@ -1,7 +1,6 @@
-import { CurrentGqlUser, IUserEntityContract } from '@lib/common';
+import { CurrentGqlUser, IUserEntityContract, UserEntity } from '@lib/common';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UserEntity } from '../user/entities/user.model';
 import { AuthService } from './auth.service';
 import { JwtTokens } from './core/object-types/jwt.object-type';
 import { GqlAuthAccessTokenGuard } from './guards/gql-auth-access-token.guard';

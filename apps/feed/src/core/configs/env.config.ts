@@ -4,8 +4,7 @@ import * as path from 'node:path';
 
 export const envSchema = z.object({
   HTTP_PORT: z.string(),
-  ACCOUNT_HOST: z.string(),
-  ACCOUNT_PORT: z.string(),
+  KAFKA_BROKER: z.string(),
 
   MINIO_ROOT_USER: z.string(),
   MINIO_ROOT_PASSWORD: z.string(),

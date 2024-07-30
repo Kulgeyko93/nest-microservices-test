@@ -11,7 +11,7 @@ export const authContext = async ({ req }) => {
       throw new Error();
     }
 
-    return true;
+    return req;
   } catch (error) {
     throw new UnauthorizedException('User unauthorize');
   }

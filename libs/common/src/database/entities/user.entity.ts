@@ -2,13 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IUserEntityContract } from '@lib/common';
+import { FileEntity, IUserEntityContract } from '@lib/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { FileEntity } from '@apps/feed/src/modules/upload/entities/file.entity';
+import { PostEntity } from './post.entity';
 
 @Entity('user')
 @ObjectType()
@@ -35,9 +35,11 @@ export class UserEntity implements IUserEntityContract {
   })
   refreshToken: string;
 
-  // @Field(() => FileEntity, { nullable: true })
-  @OneToOne(() => FileEntity, (file) => file.user)
-  avatar: FileEntity;
+  @OneToMany(() => FileEntity, (file) => file.user)
+  files: FileEntity[];
+
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
 
   @PrimaryGeneratedColumn('uuid')
   @Field()
