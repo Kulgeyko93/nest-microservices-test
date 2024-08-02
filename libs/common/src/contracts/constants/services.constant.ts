@@ -1,7 +1,7 @@
 export enum ServicesGatewayPaths {
-  ACCOUNT_SERVICE = 'account/graphql',
-  POST_SERVICE = 'post/graphql',
-  FEED_SERVICE = 'feed/graphql',
+  ACCOUNT_SERVICE = 'account',
+  POST_SERVICE = 'post',
+  FEED_SERVICE = 'feed',
 }
 
 export enum MicroservicesNames {

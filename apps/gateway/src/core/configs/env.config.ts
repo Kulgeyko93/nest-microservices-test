@@ -21,7 +21,10 @@ export const envSchema = z.object({
 export const gatewayEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(process.cwd(), 'envs', '.gateway.env'),
+  envFilePath: [
+    path.join(process.cwd(), 'envs', '.gateway.env'),
+    path.join(process.cwd(), 'envs', '.jwt.env'),
+  ],
 });
 
 export type GatewayEnv = z.infer<typeof envSchema>;

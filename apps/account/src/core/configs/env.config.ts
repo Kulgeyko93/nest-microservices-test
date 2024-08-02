@@ -15,7 +15,10 @@ export const envSchema = z.object({
 export const accountEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(process.cwd(), 'envs', '.account.env'),
+  envFilePath: [
+    path.join(process.cwd(), 'envs', '.account.env'),
+    path.join(process.cwd(), 'envs', '.jwt.env'),
+  ],
 });
 
 export type AccountEnv = z.infer<typeof envSchema>;
