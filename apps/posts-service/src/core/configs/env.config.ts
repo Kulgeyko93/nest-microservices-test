@@ -9,7 +9,7 @@ export const envSchema = z.object({
 export const postEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(process.cwd(), 'envs', '.account.env'),
+  envFilePath: path.join(process.cwd(), 'envs', '.post.env'),
 });
 
 export type PostEnv = z.infer<typeof envSchema>;
