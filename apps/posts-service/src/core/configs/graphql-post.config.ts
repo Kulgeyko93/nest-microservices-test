@@ -4,10 +4,10 @@ import {
 } from '@nestjs/apollo';
 import { ServicesGatewayPaths } from '@lib/common';
 
-export const accountGraphqlConfig = (): ApolloFederationDriverConfig => ({
+export const postGraphqlConfig = (): ApolloFederationDriverConfig => ({
   driver: ApolloFederationDriver,
   autoSchemaFile: {
     federation: 2,
   },
-  path: ServicesGatewayPaths.ACCOUNT_SERVICE,
+  path: ServicesGatewayPaths.POST_SERVICE,
 });

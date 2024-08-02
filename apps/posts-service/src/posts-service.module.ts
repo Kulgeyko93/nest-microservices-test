@@ -1,10 +1,14 @@
+import { ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { PostsServiceController } from './posts-service.controller';
-import { PostsServiceService } from './posts-service.service';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { postEnvConfig } from './core/configs/env.config';
+import { postGraphqlConfig } from './core/configs/graphql-post.config';
 
 @Module({
-  imports: [],
-  controllers: [PostsServiceController],
-  providers: [PostsServiceService],
+  imports: [
+    ConfigModule.forRoot(postEnvConfig()),
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>(postGraphqlConfig()),
+  ],
 })
 export class PostsServiceModule {}

@@ -1,5 +1,6 @@
 export enum ServicesGatewayPaths {
   ACCOUNT_SERVICE = 'account/graphql',
+  POST_SERVICE = 'post/graphql',
   FEED_SERVICE = 'feed/graphql',
 }
 

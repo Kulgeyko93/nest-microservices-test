@@ -27,6 +27,12 @@ export const apolloGatewayDriverConfig = (): ApolloGatewayDriverConfig => {
               configService.get<string>('FEED_GRAPHQL_URL') +
               `/${ServicesGatewayPaths.FEED_SERVICE}`,
           },
+          {
+            name: 'post',
+            url:
+              configService.get<string>('POST_GRAPHQL_URL') +
+              `/${ServicesGatewayPaths.POST_SERVICE}`,
+          },
         ],
       }),
       buildService({ url }) {

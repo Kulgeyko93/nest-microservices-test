@@ -8,6 +8,7 @@ export const envSchema = z.object({
 
   ACCOUNT_GRAPHQL_URL: z.string(),
   FEED_GRAPHQL_URL: z.string(),
+  POST_GRAPHQL_URL: z.string(),
 
   FEED_MS_URL: z.string(),
 
