@@ -14,14 +14,6 @@ import { getJWTConfig } from './core/configs/jwt.config';
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>(
       apolloGatewayDriverConfig(),
     ),
-    // ClientsModule.registerAsync({
-    //   isGlobal: true,
-    //   clients: [
-    //     clientModuleConfigs[KafkaMicroserviceNames.AccountMS],
-    //     clientModuleConfigs[KafkaMicroserviceNames.FeedMS],
-    //   ],
-    // }),
-    // UploadModule,
   ],
   controllers: [],
   providers: [],
