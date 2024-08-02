@@ -21,11 +21,17 @@ export const apolloGatewayDriverConfig = (): ApolloGatewayDriverConfig => {
               configService.get<string>('ACCOUNT_GRAPHQL_URL') +
               `/${ServicesGatewayPaths.ACCOUNT_SERVICE}`,
           },
+          // {
+          //   name: 'feed',
+          //   url:
+          //     configService.get<string>('FEED_GRAPHQL_URL') +
+          //     `/${ServicesGatewayPaths.FEED_SERVICE}`,
+          // },
           {
-            name: 'feed',
+            name: 'post',
             url:
-              configService.get<string>('FEED_GRAPHQL_URL') +
-              `/${ServicesGatewayPaths.FEED_SERVICE}`,
+              configService.get<string>('POST_GRAPHQL_URL') +
+              `/${ServicesGatewayPaths.POST_SERVICE}`,
           },
         ],
       }),

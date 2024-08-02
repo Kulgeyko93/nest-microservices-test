@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { getJWTConfig } from '../configs';
+import { commonEnvConfig, getJWTConfig } from '../configs';
 import {
   AccessTokenStrategy,
   LocalStrategy,
@@ -12,7 +12,7 @@ import { DatabaseModule } from '../database';
 
 @Module({
   imports: [
-    ConfigModule,
+    ConfigModule.forRoot(commonEnvConfig()),
     DatabaseModule,
     DatabaseModule.forFeature([]),
     PassportModule.register({

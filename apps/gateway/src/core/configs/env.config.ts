@@ -8,6 +8,7 @@ export const envSchema = z.object({
 
   ACCOUNT_GRAPHQL_URL: z.string(),
   FEED_GRAPHQL_URL: z.string(),
+  POST_GRAPHQL_URL: z.string(),
 
   FEED_MS_URL: z.string(),
 
@@ -20,7 +21,10 @@ export const envSchema = z.object({
 export const gatewayEnvConfig = (): ConfigModuleOptions => ({
   isGlobal: true,
   validate: (env) => envSchema.parse(env),
-  envFilePath: path.join(process.cwd(), 'envs', '.gateway.env'),
+  envFilePath: [
+    path.join(process.cwd(), 'envs', '.gateway.env'),
+    path.join(process.cwd(), 'envs', '.jwt.env'),
+  ],
 });
 
 export type GatewayEnv = z.infer<typeof envSchema>;
