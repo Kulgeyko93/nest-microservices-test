@@ -55,13 +55,13 @@
         "tsConfigPath": "apps/notification/tsconfig.app.json"
       }
     },
-    "posts-service": {
+    "post": {
       "type": "application",
-      "root": "apps/posts-service",
+      "root": "apps/post",
       "entryFile": "main",
-      "sourceRoot": "apps/posts-service/src",
+      "sourceRoot": "apps/post/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/posts-service/tsconfig.app.json"
+        "tsConfigPath": "apps/post/tsconfig.app.json"
       }
     }
   }
