@@ -5,8 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { commonEnvConfig } from './configs/env.config';
 
 @Module({
+  imports: [DatabaseModule, ConfigModule.forRoot(commonEnvConfig())],
   providers: [CommonService],
   exports: [CommonService],
-  imports: [DatabaseModule, ConfigModule.forRoot(commonEnvConfig())],
 })
 export class CommonModule {}

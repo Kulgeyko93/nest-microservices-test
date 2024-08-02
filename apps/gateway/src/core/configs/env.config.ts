@@ -7,6 +7,8 @@ export const envSchema = z.object({
   X_API_KEY: z.string(),
 
   ACCOUNT_GRAPHQL_URL: z.string(),
+  FEED_GRAPHQL_URL: z.string(),
+
   FEED_MS_URL: z.string(),
 
   KAFKA_BROKER: z.string(),
