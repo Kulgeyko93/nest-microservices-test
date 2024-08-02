@@ -14,5 +14,6 @@ import { feedGraphqlConfig } from './core/configs/graphql-feed.config';
     MinioStorageModule,
     UploadModule,
   ],
+  providers: [],
 })
 export class FeedModule {}

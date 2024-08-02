@@ -8,21 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { getJWTConfig } from '@lib/common';
 
 @Module({
-  imports: [
-    UserModule,
-    AuthCommonModule,
-    // PassportModule.register({
-    //   defaultStrategy: 'jwt',
-    // }),
-    JwtModule.register(getJWTConfig()),
-  ],
+  imports: [UserModule, AuthCommonModule, JwtModule.register(getJWTConfig())],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    AuthResolver,
-    // AccessTokenStrategy,
-    // LocalStrategy,
-    // RefreshTokenStrategy,
-  ],
+  providers: [AuthService, AuthResolver],
 })
 export class AuthModule {}

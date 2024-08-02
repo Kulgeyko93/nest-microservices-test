@@ -2,11 +2,13 @@ import { CurrentGqlUser, IUserEntityContract, UserEntity } from '@lib/common';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { JwtTokens } from './core/object-types/jwt.object-type';
-import { GqlAuthAccessTokenGuard } from './guards/gql-auth-access-token.guard';
-import { GqlAuthRefreshTokenGuard } from './guards/gql-auth-refresh-token.guard';
+import { JwtTokens } from '../core/object-types/jwt.object-type';
 import { LoginInput } from './inputs/login.input';
 import { RegisterUserInput } from './inputs/register-user.input';
+import {
+  GqlAuthAccessTokenGuard,
+  GqlAuthRefreshTokenGuard,
+} from '@lib/common/auth-common';
 
 @Resolver('auth')
 export class AuthResolver {
