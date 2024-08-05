@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from '../../user.service';
-import { UserRepository } from '../../repositories/user.repository';
-import { UserEntity } from '../../entity-components/user.entity';
 import { getMockUserData } from './mock-parameters';
+import { UserRepository } from '@apps/account/src/user/repositories/user.repository';
+import { UserService } from '@apps/account/src/user/user.service';
+import { UserEntity } from '@lib/common';
 
 describe('UserService', () => {
   let service: UserService;
