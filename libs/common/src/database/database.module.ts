@@ -11,15 +11,29 @@ import { UserEntity } from './entities/user.entity';
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('POSTGRES_HOST'),
-        port: configService.get<number>('POSTGRES_PORT'),
-        database: configService.get<string>('POSTGRES_DB'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
         autoLoadEntities: true,
         logging: configService.get<boolean>('POSTGRES_LOGGING'),
         synchronize: configService.get<boolean>('POSTGRES_SYNCHRONIZE'),
         entities: [FileEntity, UserEntity, PostEntity],
+
+        replication: {
+          master: {
+            host: configService.get<string>('POSTGRES_HOST'),
+            port: configService.get<number>('POSTGRES_PORT'),
+            username: configService.get<string>('POSTGRES_USER_MASTER'),
+            password: configService.get<string>('POSTGRES_PASSWORD_MASTER'),
+            database: configService.get<string>('POSTGRES_DB_MASTER'),
+          },
+          slaves: [
+            {
+              host: configService.get<string>('POSTGRES_HOST'),
+              port: configService.get<number>('POSTGRES_PORT'),
+              username: configService.get<string>('POSTGRES_USER_SLAVE'),
+              password: configService.get<string>('POSTGRES_PASSWORD_SLAVE'),
+              database: configService.get<string>('POSTGRES_DB_SLAVE'),
+            },
+          ],
+        },
       }),
       inject: [ConfigService],
     }),
